@@ -3,7 +3,8 @@ import morgan from "morgan";
 import cors from 'cors';
 
 import productosRoutes from "./routes/productos.routes.js"
-import lugaresRoutes from "./routes/lugaresProd.routes.js"
+import lugaresRoutes from "./routes/lugares.routes.js"
+import lugaresRoutesProd from "./routes/lugaresProd.routes.js"
 
 const app = express();
 const corsOptions = {
@@ -24,6 +25,7 @@ app.use(express.json());
 // Routes
 app.use("/api", productosRoutes);
 app.use("/api/lugares", lugaresRoutes);
+app.use("/api/lugaresProd", lugaresRoutesProd);
 
 
 app.use((req, res, next) => {
