@@ -5,26 +5,103 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import { useContext, useEffect, useState } from 'react';
+import { Fragment, useContext, useEffect, useState } from 'react';
 import { MiContexto } from '../context/context';
-import { Button } from '@mui/material';
+import { Button, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import AddHomeIcon from '@mui/icons-material/AddHome';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-
-
-
-
+import DensityMediumIcon from '@mui/icons-material/DensityMedium';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import BackupIcon from '@mui/icons-material/Backup';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+//import Link from '@mui/material/Link';
+import { Link } from 'react-router-dom';
 const ITEM_HEIGHT = 48;
 
 
 export default function NavBar() {
     const {lugares} = useContext(MiContexto)
-     
+
+    //despliegue
+    const [state, setState] = useState({
+      top: false,
+      left: false,
+      bottom: false,
+      right: false,
+    });
+  
+    const toggleDrawer = (anchor, open) => (event) => {
+      if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+        return;
+      }
+  
+      setState({ ...state, [anchor]: open });
+    };    
+    const links = [
+      {text: 'Agregar Producto', url: '/addproducto', icon: AddIcon },
+      {text: 'Actualizar Producto', url: '/', icon: BackupIcon },
+      {text: 'Eliminar Producto', url: '/', icon: DeleteIcon },
+      {text: 'Modificar Stock', url: '/', icon: AssignmentIcon }
+    ]
+  
+    const list = (anchor) => (
+      <Box
+        sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
+        role="presentation"
+        onClick={toggleDrawer(anchor, false)}
+        onKeyDown={toggleDrawer(anchor, false)}
+      >
+        <List>
+          {links.map((link, index) => {
+            const Icon = link.icon
+            return(
+            <ListItem key={index} disablePadding>
+              <Link to = {link.url} >
+                <ListItemButton >
+                  <ListItemIcon>
+                     <Icon/>
+                  </ListItemIcon>
+                  <ListItemText primary={link.text} />
+                </ListItemButton>
+              </Link>  
+            </ListItem>)
+          })}
+        </List>
+      </Box>
+    );
+
+    //Boton lugares
+    const listLug = (anchor) => (
+      <Box
+        sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
+        role="presentation"
+        onClick={toggleDrawer(anchor, false)}
+        onKeyDown={toggleDrawer(anchor, false)}
+      >
+        <List>
+          {lugares.map((lug, index) => {
+            return(
+            <ListItem key={index} disablePadding>
+              <Link >
+                <ListItemButton >
+                  <ListItemIcon>
+                     <AddHomeIcon/>
+                  </ListItemIcon>
+                  <ListItemText primary={lug.fullname}/>
+                </ListItemButton>
+              </Link>  
+            </ListItem>)
+          })}
+        </List>
+      </Box>
+    );
+    
+    //3 puntos
     const [optionsLug, setOptionsLug] = useState([])
     const [anchorEl, setAnchorEl] = useState(null)
     const open = Boolean(anchorEl);
-    const handleClick = (event) => {
+    const handleClickPuntos = (event) => {
         console.log(event.currentTarget);
       setAnchorEl(event.currentTarget);
     };
@@ -34,10 +111,6 @@ export default function NavBar() {
 
     //////////////
     
-    const contLug = lugares.length
-
-    console.log(lugares);
-
     useEffect(()=>{
         let options = []
         lugares.map((lu)=>{
@@ -52,40 +125,42 @@ export default function NavBar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
-          >
-            Aberturas Bodereau
-          </Typography>
+          <div>
+              <Fragment>
+                <Button sx={{color:'white'}} onClick={toggleDrawer('left', true)}><DensityMediumIcon/></Button>
+                <Drawer
+                  anchor={'left'}
+                  open={state['left']}
+                  onClose={toggleDrawer('left', false)}
+                >
+                  {list('left')}
+                </Drawer>
+              </Fragment>
+          </div>
+          <Link to='/' >
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              color={'white'}
+            >
+                  Aberturas Bodereau
+            </Typography>
+          </Link>
           
           <Box sx={{ flexGrow: 1 }} /> {/* sirve para generar el espacio */ }
-            <Box sx={{ 
-                    width: '30%', borderRadius: '15px',
-                    display: { xs: 'none', md: 'grid' }, gridTemplateColumns: `repeat(${contLug}, 1fr)`, gap: '5px'
-                    }}  >
-                    {
-                    lugares.map((lug, index)=>{
-                        console.log(index);
-                        return (
-                            <Button key={index} variant="contained" size="small" style={{ backgroundColor: '#ab47bc' }} startIcon={<AddHomeIcon/>} >
-                                {lug.fullname}                                
-                            </Button>
-                        )
-                    })
-                }
-            </Box>
+            <div>
+                <Fragment>
+                  <Button sx={{color:'white'}} onClick={toggleDrawer('right', true)}><AddHomeIcon/></Button>
+                  <Drawer
+                    anchor={'right'}
+                    open={state['right']}
+                    onClose={toggleDrawer('right', false)}
+                  >
+                    {listLug('right')}
+                  </Drawer>
+                </Fragment>
+            </div>
             <Box sx={{ display: { xs: 'flex', md: 'none' } }}  >
                     <IconButton
                         aria-label="more"
@@ -93,7 +168,7 @@ export default function NavBar() {
                         aria-controls={open ? 'long-menu' : undefined}
                         aria-expanded={open ? 'true' : undefined}
                         aria-haspopup="true"
-                        onClick={handleClick}
+                        onClick={handleClickPuntos}
                     >
                     <MoreVertIcon />
                     </IconButton>

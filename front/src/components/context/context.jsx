@@ -41,6 +41,24 @@ const CartProvider = ({children}) => {
         }
       
   }
+
+  //obtener ubicacion de productos
+  const [producto, setProducto] = useState([])
+  const [infoprod, setInfoprod] = useState([])
+
+  const getUbiProducto = async (id) =>{
+      try {
+          const response = await fetch(`http://localhost:8080/api/lugaresProd/getUbicacionProducto/${id}`)
+          if (!response.ok) {
+            throw new Error('problemas al consultar en la navegacion');
+          }
+          const data = await response.json();
+          setProducto(data.response)
+        } catch (error) {
+          console.error('problemas con la consulta:', error);
+        }
+      
+  }
   
 
   useEffect(()=>{
@@ -52,7 +70,8 @@ const CartProvider = ({children}) => {
       // aca llamamos al hoock useMiContexto
       <MiContexto.Provider value={{
         lugares, setLugares,
-        productos, setProductos, getProductos
+        productos, setProductos, getProductos,
+        producto, setProducto, getUbiProducto, infoprod, setInfoprod,
 
       }} >
           {children}

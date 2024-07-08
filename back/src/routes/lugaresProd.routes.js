@@ -9,12 +9,12 @@ const router = Router()
 
 
 
-router.get("/getUbicacionProducto/:ti", getUbicacionProducto)
-router.put("/upDateStockProducto/:ti", upDateStockProducto)
+router.get("/getUbicacionProducto/:idg", getUbicacionProducto)
+router.put("/upDateStockProducto/:idg", upDateStockProducto)
 
 
-router.post("/addProductoLugar/:ti", addproductolugar)
-router.post("/deleteProductoLugar/:ti", deleteproductolugar)
+router.post("/addProductoLugar/:idg", addproductolugar)
+router.post("/deleteProductoLugar/:idg", deleteproductolugar)
 
 
 

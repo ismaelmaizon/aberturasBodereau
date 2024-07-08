@@ -7,12 +7,15 @@ import CartProvider from './components/context/context.jsx'
 import SignInSide from './components/login/SignInSide.jsx'
 import Inicio from './components/inicio/inicio.jsx'
 import NavBar from './components/navbar/navBar.jsx'
+import AddProducto from './components/addproduct/addproducto.jsx'
+import clases from './App.module.css'
+
 
 function App() {
 
   return (
     <>
-      <div>
+      <div className={clases.class} >
         <CartProvider>
           <div>
             <Routes>
@@ -24,7 +27,8 @@ function App() {
               <NavBar/>
             </div>
             <Routes>
-              <Route element={<Inicio/>} path='/Inicio' ></Route>
+              <Route element={<Inicio/>} path='/' ></Route>
+              <Route element={<AddProducto/>} path='/addproducto' ></Route>
             </Routes>
           </div>
         </CartProvider>

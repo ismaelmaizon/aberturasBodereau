@@ -1,5 +1,5 @@
 import { pool } from "../db.js";
-import {DataTime} from "../utils.js";
+import {DataTime, generarIDAleatorio} from "../utils.js";
 
 export const getProductos = async (req, res) => {
   let productos = []
@@ -35,11 +35,12 @@ export const getProducto = async (req, res) => {
 export const createProducto = async (req, res) => {
   const { Tipo, Descripcion, Ancho, Alto, Izq, Derc, Precio_U } = req.body;
   const stock = 0
-  console.log(Tipo, Descripcion, Ancho, Alto, Izq, Derc, Precio_U, stock);
+  const idGenerate = generarIDAleatorio(10)
+  console.log(idGenerate,Tipo, Descripcion, Ancho, Alto, Izq, Derc, Precio_U, stock);
   try {
     const [rows] = await pool.query(
-      "INSERT INTO productos (Tipo, Descripcion, Ancho, Alto, Izq, Derc, Precio_U, stock) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
-      [Tipo, Descripcion, Ancho, Alto, Izq, Derc, Precio_U, stock]
+      "INSERT INTO productos (IdGenerate, Tipo, Descripcion, Ancho, Alto, Izq, Derc, Precio_U, stock) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
+      [idGenerate,Tipo, Descripcion, Ancho, Alto, Izq, Derc, Precio_U, stock]
     );
     res.status(201).json({ id: rows.insertId, Tipo, Descripcion, Ancho, Alto, Izq, Derc, Precio_U, stock });
   } catch (error) {
