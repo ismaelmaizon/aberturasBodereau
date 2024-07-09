@@ -15,6 +15,8 @@ export default function Inicio() {
     } = useContext(MiContexto)
 
     const [ver, setVer] = useState(false)
+
+
     
     useEffect(()=>{
         let info = []
@@ -27,6 +29,7 @@ export default function Inicio() {
             })
         })
         setInfoprod(info)
+
     }, [producto])
 
     return (
@@ -35,6 +38,7 @@ export default function Inicio() {
             {
              producto.length == 0 ? <div></div> : <div style={{ display: 'flex', margin: 'auto', padding: '15px' }} >{
                 infoprod.map((prod, index)=>{
+                            console.log(prod);
                             return ( <Box key={index} sx={{ margin: 'auto', backgroundColor:'#ec407a' , borderRadius: '10px' }}  >
                                         <Grid container direction="row" justifyContent="center" alignItems="center" >
                                                     <Grid item xs={15}>
@@ -47,7 +51,8 @@ export default function Inicio() {
                                                             </p>
                                                         </CardContent>
                                                         <CardActions>
-                                                            <Button size="large" sx={{ margin: 'auto', backgroundColor: '#1769aa', color: 'white' }} >Learn More</Button>
+                                                            <Button size="medium" sx={{ margin: 'auto', backgroundColor: '#1769aa', color: 'white' }} >Actualizar Stock</Button>
+                                                            <Button size="medium" sx={{ margin: 'auto', backgroundColor: '#1769aa', color: 'white' }} >Eliminar del Lugar</Button>
                                                         </CardActions>
                                                     </Grid>
                                         </Grid>

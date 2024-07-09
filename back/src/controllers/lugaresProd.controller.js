@@ -118,6 +118,19 @@ export const getUbicacionProducto = async (req, res) =>{
     }
 }
 
+// obtener los productos de un lugar
+export const getProductosLugar = async (req, res) =>{
+    const {idl} = req.params
+    console.log(idl);
+    try{
+        const [row] = await pool.query("SELECT * FROM lugaresProducto where id_lugar = ?",[idl])
+        return res.send( {status: 200, message: 'succes', response: row} );    
+    }catch(err){
+        return res.status(500).json({ message: "Something goes wrong" });
+
+    }
+}
+
 //actualizar stock de un producto
 export const upDateStockProducto = async (req, res) =>{
     const {idg} = req.params

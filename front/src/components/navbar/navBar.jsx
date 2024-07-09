@@ -1,15 +1,9 @@
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import { Fragment, useContext, useEffect, useState } from 'react';
-import { MiContexto } from '../context/context';
+import { Fragment,useState } from 'react';
 import { Button, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import AddHomeIcon from '@mui/icons-material/AddHome';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DensityMediumIcon from '@mui/icons-material/DensityMedium';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -17,13 +11,11 @@ import BackupIcon from '@mui/icons-material/Backup';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 //import Link from '@mui/material/Link';
 import { Link } from 'react-router-dom';
-const ITEM_HEIGHT = 48;
+
 
 
 export default function NavBar() {
-    const {lugares} = useContext(MiContexto)
-
-    //despliegue
+    //despliegue getProductosLugar
     const [state, setState] = useState({
       top: false,
       left: false,
@@ -71,56 +63,6 @@ export default function NavBar() {
       </Box>
     );
 
-    //Boton lugares
-    const listLug = (anchor) => (
-      <Box
-        sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
-        role="presentation"
-        onClick={toggleDrawer(anchor, false)}
-        onKeyDown={toggleDrawer(anchor, false)}
-      >
-        <List>
-          {lugares.map((lug, index) => {
-            return(
-            <ListItem key={index} disablePadding>
-              <Link >
-                <ListItemButton >
-                  <ListItemIcon>
-                     <AddHomeIcon/>
-                  </ListItemIcon>
-                  <ListItemText primary={lug.fullname}/>
-                </ListItemButton>
-              </Link>  
-            </ListItem>)
-          })}
-        </List>
-      </Box>
-    );
-    
-    //3 puntos
-    const [optionsLug, setOptionsLug] = useState([])
-    const [anchorEl, setAnchorEl] = useState(null)
-    const open = Boolean(anchorEl);
-    const handleClickPuntos = (event) => {
-        console.log(event.currentTarget);
-      setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-      setAnchorEl(null);
-    };
-
-    //////////////
-    
-    useEffect(()=>{
-        let options = []
-        lugares.map((lu)=>{
-            options.push(lu.fullname)
-        })
-        setOptionsLug(options)
-    }, [anchorEl])
-
-
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -149,51 +91,6 @@ export default function NavBar() {
           </Link>
           
           <Box sx={{ flexGrow: 1 }} /> {/* sirve para generar el espacio */ }
-            <div>
-                <Fragment>
-                  <Button sx={{color:'white'}} onClick={toggleDrawer('right', true)}><AddHomeIcon/></Button>
-                  <Drawer
-                    anchor={'right'}
-                    open={state['right']}
-                    onClose={toggleDrawer('right', false)}
-                  >
-                    {listLug('right')}
-                  </Drawer>
-                </Fragment>
-            </div>
-            <Box sx={{ display: { xs: 'flex', md: 'none' } }}  >
-                    <IconButton
-                        aria-label="more"
-                        id="long-button"
-                        aria-controls={open ? 'long-menu' : undefined}
-                        aria-expanded={open ? 'true' : undefined}
-                        aria-haspopup="true"
-                        onClick={handleClickPuntos}
-                    >
-                    <MoreVertIcon />
-                    </IconButton>
-                    <Menu
-                        id="long-menu"
-                        MenuListProps={{
-                        'aria-labelledby': 'long-button',
-                        }}
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                        PaperProps={{
-                        style: {
-                            maxHeight: ITEM_HEIGHT * 4.5,
-                            width: '20ch',
-                        },
-                        }}
-                    >
-                        {optionsLug.map((option) => (
-                        <MenuItem key={option} selected={option === 'Pyxis'} onClick={handleClose}>
-                            {option} <AddHomeIcon/>
-                        </MenuItem>
-                        ))}
-                    </Menu>
-            </Box>
         </Toolbar>
       </AppBar>
       {/*renderMobileMenu*/}

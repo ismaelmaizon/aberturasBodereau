@@ -33,6 +33,9 @@ export const getProducto = async (req, res) => {
 };
 
 export const createProducto = async (req, res) => {
+  console.log('body');
+  console.log(req.body);
+  
   const { Tipo, Descripcion, Ancho, Alto, Izq, Derc, Precio_U } = req.body;
   const stock = 0
   const idGenerate = generarIDAleatorio(10)
@@ -42,7 +45,8 @@ export const createProducto = async (req, res) => {
       "INSERT INTO productos (IdGenerate, Tipo, Descripcion, Ancho, Alto, Izq, Derc, Precio_U, stock) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
       [idGenerate,Tipo, Descripcion, Ancho, Alto, Izq, Derc, Precio_U, stock]
     );
-    res.status(201).json({ id: rows.insertId, Tipo, Descripcion, Ancho, Alto, Izq, Derc, Precio_U, stock });
+    console.log(rows);
+    //res.status(201).json({ id: rows.insertId, Tipo, Descripcion, Ancho, Alto, Izq, Derc, Precio_U, stock });
   } catch (error) {
     return res.status(500).json({ message: "Something goes wrong" });
   }
