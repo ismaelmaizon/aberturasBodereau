@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { createContext } from "react";
-
+//alert
+import Swal from 'sweetalert2'
 
 export const MiContexto = createContext([])
 
@@ -39,9 +40,26 @@ const CartProvider = ({children}) => {
         }
       
   }
+  //obtener producto
+  const [idg, setIdg] = useState('')
+  const [producto, setProducto] = useState([])
+  const getProducto = async (idg) =>{
+      try {
+          const response = await fetch(`http://localhost:8080/api/producto/${idg}`)
+          if (!response.ok) {
+            throw new Error('problemas al consultar en la navegacion');
+          }
+          const data = await response.json();
+          console.log(data);
+          return data
+        } catch (error) {
+          console.error('problemas con la consulta:', error);
+        }
+      
+  }
 
   //obtener ubicacion de productos
-  const [producto, setProducto] = useState([])
+  const [productoUbi, setProductoUbi] = useState([])
   const [infoprod, setInfoprod] = useState([])
   const getUbiProducto = async (id) =>{
       try {
@@ -50,7 +68,13 @@ const CartProvider = ({children}) => {
             throw new Error('problemas al consultar en la navegacion');
           }
           const data = await response.json();
-          setProducto(data.response)
+          console.log(data.response)
+          if (data.response == []) {
+            return []
+          }else{
+            setProductoUbi(data.response)
+            return data.response
+          }
         } catch (error) {
           console.error('problemas con la consulta:', error);
         }
@@ -75,7 +99,7 @@ const CartProvider = ({children}) => {
 
 
   //crear producto
-  const [prodCreado, setPructoCreado] = useState(false)
+  //const [prodCreado, setPructoCreado] = useState(false)
   const createProducto = async ( data ) =>{
     let prod = {
       Tipo: data.Tipo,
@@ -106,8 +130,8 @@ const CartProvider = ({children}) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        const data = await response.json();
-        console.log(data);
+        
+        return response
       } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
         
@@ -239,6 +263,26 @@ const CartProvider = ({children}) => {
     setRows(prods)
 }
 
+  //Alertas
+  const alert = async (status) =>{
+    if (status == 'success') {
+      const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          }
+        });
+        Toast.fire({
+          icon: "success",
+          title: "Producto Agregado"
+        });
+    }
+}
       
 
   useEffect(()=>{
@@ -251,12 +295,14 @@ const CartProvider = ({children}) => {
       <MiContexto.Provider value={{
         lugares, setLugares,
         productos, setProductos, getProductos,
-        producto, setProducto, getUbiProducto, infoprod, setInfoprod,
+        producto, setProducto, getProducto,idg, setIdg,
+        productoUbi, setProductoUbi, getUbiProducto, infoprod, setInfoprod,
         getProductosLugar, productsLug, setProductsLug,
         filtrarTipoLadoLug, rows, setRows,
         refresh,
         lug, setLug, lado, setLado, tipo, setTipo,
-        createProducto
+        createProducto,
+        alert
       }} >
           {children}
       </MiContexto.Provider>

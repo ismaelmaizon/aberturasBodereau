@@ -3,7 +3,7 @@ import { useContext, useEffect, useState} from "react"
 import { MiContexto } from "../context/context"
 
 //lugares
-import { Box, Button, CardActions, CardContent, Grid} from '@mui/material';
+import { Box, Button, Card, CardActions, CardContent, Grid, Typography} from '@mui/material';
 //productos
 import Productos from "../productos/productos";
 
@@ -11,17 +11,17 @@ import Productos from "../productos/productos";
 
 export default function Inicio() {
     const {
-        producto, lugares, infoprod, setInfoprod
+        producto,
+        productoUbi, lugares, infoprod, setInfoprod
     } = useContext(MiContexto)
 
     const [ver, setVer] = useState(false)
-
 
     
     useEffect(()=>{
         let info = []
         lugares.map((lug)=>{
-            producto.map((pr)=>{
+            productoUbi.map((pr)=>{
                 if (lug.id == pr.id_lugar) {
                     let resul = { fullname : lug.fullname, stock: pr.stock }
                     info.push(resul)
@@ -30,13 +30,39 @@ export default function Inicio() {
         })
         setInfoprod(info)
 
-    }, [producto])
+    }, [productoUbi])
+
+
 
     return (
         <div>
             <div>
+            {producto.length == 0 ? <div></div> : <Card sx={{ maxWidth: 500, margin: 'auto', marginTop: '25px'  }}>
+                <CardContent>
+                    <Typography gutterBottom variant="h6" component="div">
+                    El Producto no se encuentra en ningun lugar
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                    Id Producto: {producto.IdGenerate}
+                    </Typography>
+                    <Typography  variant="body2" color="text.secondary">
+                    Descripcion: {producto.Descripcion}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                    Precio: {producto.Precio_U}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                    Stock: {producto.stock}
+                    </Typography>
+                </CardContent>
+                <CardActions>
+                    <Button size="small">Share</Button>
+                    <Button size="small">Learn More</Button>
+                </CardActions>
+                </Card>
+             }
             {
-             producto.length == 0 ? <div></div> : <div style={{ display: 'flex', margin: 'auto', padding: '15px' }} >{
+             productoUbi.length == 0 ? <div></div> : <div style={{ display: 'flex', margin: 'auto', padding: '15px' }} >{
                 infoprod.map((prod, index)=>{
                             console.log(prod);
                             return ( <Box key={index} sx={{ margin: 'auto', backgroundColor:'#ec407a' , borderRadius: '10px' }}  >

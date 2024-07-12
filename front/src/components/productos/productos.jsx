@@ -21,7 +21,8 @@ export default function Productos() {
 
     const {
         lugares,
-        productos, setProducto,
+        productos, setProductoUbi,
+        getProducto, setProducto, setIdg,
         getUbiProducto,
         filtrarTipoLadoLug, rows, setRows,
         refresh,
@@ -43,13 +44,7 @@ export default function Productos() {
     }
     
     
-    //producto    
-    const [prod, setProd] = useState('')
-    const handleChangeProd = (event) => {
-        console.log(event.target.innerText)
-        setProd(event.target.innerText)
-    }
-
+    
     //set lado
     const lados = ['Izq','Derc']    
     const handleChangeLado = (event) => {
@@ -58,11 +53,24 @@ export default function Productos() {
     }
 
     //set tipos
-    const tipos = ['Tipo1','Tipo2','Tipo3','Tipo4','Tipo4','Tipo5','Tipo6','Tipo7','Tipo8',]    
+    const [tipos, setTipos] = useState([])
+    const tip = () =>{
+        let ti = []
+        productos.map((t)=>{
+            ti.push(t.Tipo)
+        })
+        setTipos(ti)
+    }   
     const handleChange = (event) => {
         setTipo(event.target.value)
     }
-
+    
+    //producto    
+    const [prod, setProd] = useState('')
+    const handleChangeProd = (event) => {
+        console.log(event.target.innerText)
+        setProd(event.target.innerText)
+    }
     const [ids, setids] = useState([])
 
     const columns = [
@@ -80,6 +88,7 @@ export default function Productos() {
     
 
     useEffect(()=>{
+        tip()
         state()
         let prods = []
         let ids = []
@@ -196,7 +205,18 @@ export default function Productos() {
                     </FormControl>
                 </Grid>
                 <Grid item xs={2}>
-                    <Button variant="contained"  sx={{padding: '10px' }} endIcon={<SearchIcon />} onClick={()=>{ setProducto([]), getUbiProducto(prod)}} >buscar</Button>
+                    <Button variant="contained"  sx={{padding: '10px' }} endIcon={<SearchIcon />} onClick={ async ()=>{ 
+                        setProductoUbi([]) 
+                        setIdg([])
+                        let res = await getProducto(prod)
+                        console.log(res);
+                        let response = await getUbiProducto(prod)
+                        console.log(response);
+                        if (response.length == 0 && res) {
+                            setProducto(res)
+                            console.log(res); 
+                        }
+                        }} >buscar</Button>
                 </Grid>
             </Grid>
             {/********************* */ }
@@ -263,205 +283,10 @@ export default function Productos() {
                     </FormControl>
                 </Grid>
                 <Grid item xs={2}>
-                    <Button variant="contained"  sx={{padding: '10px', marginBottom: '15px'}} endIcon={<SearchIcon />} onClick={()=>{ setProducto([]), getUbiProducto(prod)}} >buscar</Button>
+                    <Button variant="contained"  sx={{padding: '10px', marginBottom: '15px'}} endIcon={<SearchIcon />} onClick={()=>{ setProductoUbi([]), getUbiProducto(prod)}} >buscar</Button>
                 </Grid>
             </Grid>
             <DataGrid sx={{height: '500px'}} rows={rows} columns={columns}  />
         </div>
     );
 }
-
-/*
-    const filtrarTipoLadoLug = async (tipo, lado, lug) =>{
-        setRows([])
-        console.log(lug);
-        console.log(tipo);
-        console.log(lado);
-        let prods = []
-        
-        if(!tipo && !lado){
-            const response = await getProductosLugar(lug)
-            setProductsLug(response)
-            console.log(productsLug);
-            productsLug.map((prodlug)=>{
-                productos.map((prod)=>{
-                    if(prodlug.id_producto == prod.id){
-                        let newProd = {
-                            id: prod.id,
-                            col0: prod.IdGenerate, 
-                            col1: prod.Tipo, 
-                            col2: prod.Descripcion,
-                            col3: prod.Alto,
-                            col4: prod.Ancho,
-                            col5: prod.Derc,
-                            col6: prod.Izq,
-                            col7: prod.stock,
-                            col8: prod.Precio_U
-                        }
-                        prods.push(newProd)
-                    }
-                })
-            })
-            setRows(prods)
-            console.log('filtrar solo por lugar');
-        }else if(!lado && !lug){
-            productos.map((prod)=>{
-                console.log(prod);
-                if(tipo == prod.Tipo){
-                    let newProd = {
-                        id: prod.id,
-                        col0: prod.IdGenerate, 
-                        col1: prod.Tipo, 
-                        col2: prod.Descripcion,
-                        col3: prod.Alto,
-                        col4: prod.Ancho,
-                        col5: prod.Derc,
-                        col6: prod.Izq,
-                        col7: prod.stock,
-                        col8: prod.Precio_U
-                    }
-                    prods.push(newProd)
-                }
-            })
-            setRows(prods)
-            console.log('filtrar solo tipo');
-        }else if(!tipo && !lug  ){
-            productos.map((prod)=>{
-                console.log(prod);
-                if(lado == 'Derc' && prod.Derc == 1){
-                    let newProd = {
-                        id: prod.id,
-                        col0: prod.IdGenerate, 
-                        col1: prod.Tipo, 
-                        col2: prod.Descripcion,
-                        col3: prod.Alto,
-                        col4: prod.Ancho,
-                        col5: prod.Derc,
-                        col6: prod.Izq,
-                        col7: prod.stock,
-                        col8: prod.Precio_U
-                    }
-                    prods.push(newProd)
-                }else if (lado == 'Izq' && prod.Izq == 1){
-                    let newProd = {
-                        id: prod.id,
-                        col0: prod.IdGenerate, 
-                        col1: prod.Tipo, 
-                        col2: prod.Descripcion,
-                        col3: prod.Alto,
-                        col4: prod.Ancho,
-                        col5: prod.Derc,
-                        col6: prod.Izq,
-                        col7: prod.stock,
-                        col8: prod.Precio_U
-                    }
-                    prods.push(newProd)
-                }
-            })
-            setRows(prods)
-            console.log('filtrar solo lado');
-        }else if( tipo && lug ) {
-            const response = await getProductosLugar(lug)
-            setProductsLug(response)
-            console.log(productsLug);
-            productsLug.map((prodlug)=>{
-                productos.map((prod)=>{
-                    if(prodlug.id_producto == prod.id && tipo == prod.Tipo){
-                        let newProd = {
-                            id: prod.id,
-                            col0: prod.IdGenerate, 
-                            col1: prod.Tipo, 
-                            col2: prod.Descripcion,
-                            col3: prod.Alto,
-                            col4: prod.Ancho,
-                            col5: prod.Derc,
-                            col6: prod.Izq,
-                            col7: prod.stock,
-                            col8: prod.Precio_U
-                        }
-                        prods.push(newProd)
-                    }
-                })
-            })
-            setRows(prods)
-            console.log('filtrar lugar y tipo');
-        }else if( lado && lug ){
-            const response = await getProductosLugar(lug)
-            setProductsLug(response)
-            console.log(productsLug);
-            productsLug.map((prodlug)=>{
-                productos.map((prod)=>{
-                    if(lado == 'Derc' && prod.Derc == 1 && prodlug.id_producto == prod.id){
-                        let newProd = {
-                            id: prod.id,
-                            col0: prod.IdGenerate, 
-                            col1: prod.Tipo, 
-                            col2: prod.Descripcion,
-                            col3: prod.Alto,
-                            col4: prod.Ancho,
-                            col5: prod.Derc,
-                            col6: prod.Izq,
-                            col7: prod.stock,
-                            col8: prod.Precio_U
-                        }
-                        prods.push(newProd)
-                    }else if(lado == 'Izq' && prod.Izq == 1 && prodlug.id_producto == prod.id){
-                        let newProd = {
-                            id: prod.id,
-                            col0: prod.IdGenerate, 
-                            col1: prod.Tipo, 
-                            col2: prod.Descripcion,
-                            col3: prod.Alto,
-                            col4: prod.Ancho,
-                            col5: prod.Derc,
-                            col6: prod.Izq,
-                            col7: prod.stock,
-                            col8: prod.Precio_U
-                        }
-                        prods.push(newProd)
-                    }
-                })
-            })
-            setRows(prods)
-            console.log('fitrar lado y lugar');
-        }else if( tipo && lado ){
-            productos.map((prod)=>{
-                console.log(prod);
-                if(lado == 'Derc' && prod.Derc == 1 && tipo == prod.Tipo){
-                    let newProd = {
-                        id: prod.id,
-                        col0: prod.IdGenerate, 
-                        col1: prod.Tipo, 
-                        col2: prod.Descripcion,
-                        col3: prod.Alto,
-                        col4: prod.Ancho,
-                        col5: prod.Derc,
-                        col6: prod.Izq,
-                        col7: prod.stock,
-                        col8: prod.Precio_U
-                    }
-                    prods.push(newProd)
-                }else if (lado == 'Izq' && prod.Izq == 1 && tipo == prod.Tipo){
-                    let newProd = {
-                        id: prod.id,
-                        col0: prod.IdGenerate, 
-                        col1: prod.Tipo, 
-                        col2: prod.Descripcion,
-                        col3: prod.Alto,
-                        col4: prod.Ancho,
-                        col5: prod.Derc,
-                        col6: prod.Izq,
-                        col7: prod.stock,
-                        col8: prod.Precio_U
-                    }
-                    prods.push(newProd)
-                }
-            })
-            setRows(prods)
-            console.log('filtrar tipo y lado');
-        }
-        
-    }
-
-
-*/

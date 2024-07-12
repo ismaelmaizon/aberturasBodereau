@@ -10,7 +10,7 @@ const router = Router();
 // GET todos los /productos
 router.get("/productos", getProductos);
 // GET un producto
-router.get("/producto/:ti", getProducto);
+router.get("/producto/:idg", getProducto);
 
 // DELETE un producto
 

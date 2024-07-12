@@ -16,14 +16,14 @@ export const getProductos = async (req, res) => {
 
 export const getProducto = async (req, res) => {
   try {
-    const { ti } = req.params;
-    console.log(ti);
-    const [rows] = await pool.query("SELECT * FROM productos WHERE Tipo = ?", [
-      ti,
+    const { idg } = req.params;
+    console.log(idg);
+    const [rows] = await pool.query("SELECT * FROM productos WHERE IdGenerate = ?", [
+      idg,
     ]);
 
     if (rows.length <= 0) {
-      return res.status(404).json({ message: "paciente not found" });
+      return res.status(404).json({ message: "producto not found" });
     }
 
     res.json(rows[0]);
@@ -46,7 +46,7 @@ export const createProducto = async (req, res) => {
       [idGenerate,Tipo, Descripcion, Ancho, Alto, Izq, Derc, Precio_U, stock]
     );
     console.log(rows);
-    //res.status(201).json({ id: rows.insertId, Tipo, Descripcion, Ancho, Alto, Izq, Derc, Precio_U, stock });
+    res.status(200).json({ id: rows.insertId, Tipo, Descripcion, Ancho, Alto, Izq, Derc, Precio_U, stock });
   } catch (error) {
     return res.status(500).json({ message: "Something goes wrong" });
   }

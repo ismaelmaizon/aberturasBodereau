@@ -1,13 +1,16 @@
 import { Box, Button, Grid, MenuItem, TextField, Typography } from "@mui/material";
 import { useContext, useState } from "react";
 import { MiContexto } from "../context/context";
+import { useNavigate } from "react-router-dom";
 
 
 
 
 export default function AddProducto () {
 
-    const {createProducto} = useContext(MiContexto)
+    const {createProducto, alert} = useContext(MiContexto)
+
+    const router = useNavigate()
 
     const [data, setData] = useState({
         Tipo: '',
@@ -90,34 +93,14 @@ export default function AddProducto () {
                 </Grid>
             <Button type="submit" onClick={ async ()=>{
                 console.log(data);
-                createProducto(data)
+                let respon = await createProducto(data)
+                console.log(respon.status);
+                if (respon.status == 200) {
+                    await alert('success')
+                    router('/')
+                }
             }} sx={{ width: '45%', height: '50px', backgroundColor: 'Black', margin: 'auto'}} >crear</Button>
             </Box>
         </Box>
     )
 }
-
-/*
-<Grid item xs={6}>
-<TextField fullWidth label='Descripcion' name='descripcion' type="text" onChange={dataFrom}></TextField>
-</Grid>
-<Grid item xs={6}>
-<TextField fullWidth label='Alto' name='alto' type="text" onChange={dataFrom}></TextField>
-</Grid>
-<Grid item xs={6}>
-<TextField fullWidth label='Ancho' name='ancho' type="text" onChange={dataFrom}></TextField>
-</Grid>
-<Grid item xs={6}>
-<TextField fullWidth label='Derc' name='Derc' type="text" onChange={dataFrom}></TextField>
-</Grid>
-<Grid item xs={6}>
-<TextField fullWidth label='Izq' name='Izq' type="text" onChange={dataFrom}></TextField>
-</Grid>
-<Grid item xs={6}>
-<TextField fullWidth label='Stock' name='stock' type="text" onChange={dataFrom}></TextField>
-</Grid>
-<Grid item xs={6}>
-<TextField fullWidth label='PrecioUnidad' name='PrecioUnidad' type="text" onChange={dataFrom}></TextField>
-</Grid>
-
-*/
