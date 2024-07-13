@@ -22,7 +22,7 @@ export default function Productos() {
     const {
         lugares,
         productos, setProductoUbi,
-        getProducto, setProducto, setIdg,
+        getProducto, setProducto,
         getUbiProducto,
         filtrarTipoLadoLug, rows, setRows,
         refresh,
@@ -119,12 +119,12 @@ export default function Productos() {
     return (
         <div style={{ height: 350, width: '90%', margin: 'auto', marginTop: '15px' }}>
             <Button variant="contained"  sx={{ padding: '15px' }} endIcon={<RotateLeftIcon />} onClick={()=>{refresh()}}>refresh</Button>
-            <Grid sx={{ display: { xs: 'none', md: 'grid', gridTemplateColumns: `repeat(6, 1fr)`, alignItems:'center'} }} container>
-                <Grid item xs={6}>
-                    <FormControl sx={{ marginTop: '25px' , width: '100%', paddingBottom: '25px'}}>
+            <Grid sx={{ display: { xs: 'none', md: 'grid', gridTemplateColumns: `repeat(6, 1fr)`, alignItems:'center'},  gap: '5px' }} container>
+                <Grid item xs={6} >
+                    <FormControl sx={{ marginTop: '10px' , width: '100%', paddingBottom: '10px'}}>
                                 <InputLabel id="demo-select-small-label" sx={{ fontSize: '15px' }} variant='outlined' >Tipo</InputLabel>
                                 <Select
-                                sx={{height:'100%'}}
+                                sx={{height:'50px'}}
                                 labelId="demo-select-small-label"
                                 id="demo-select-small"
                                 value={tipo}
@@ -144,10 +144,10 @@ export default function Productos() {
                     </FormControl>
                 </Grid>
                 <Grid item xs={6}>
-                    <FormControl sx={{ marginTop: '25px' , width: '100%', paddingBottom: '25px'}}>
-                                <InputLabel id="demo-select-small-label">Lado</InputLabel>
+                    <FormControl sx={{ marginTop: '10px' , width: '100%', paddingBottom: '10px'}}>
+                                <InputLabel id="demo-select-small-label" sx={{ fontSize: '15px' }} variant='outlined' >Lado</InputLabel>
                                 <Select
-                                sx={{height:'100%'}}
+                                sx={{height:'50px'}}
                                 labelId="demo-select-small-label"
                                 id="demo-select-small"
                                 value={lado}
@@ -167,10 +167,10 @@ export default function Productos() {
                     </FormControl>
                 </Grid>
                 <Grid item xs={6}>
-                    <FormControl sx={{ marginTop: '25px' , width: '100%', paddingBottom: '25px'}}>
-                                <InputLabel id="demo-select-small-label">Lugar</InputLabel>
+                    <FormControl sx={{ marginTop: '10px' , width: '100%', paddingBottom: '10px'}}>
+                                <InputLabel id="demo-select-small-label" sx={{ fontSize: '15px' }} variant='outlined'>Lugar</InputLabel>
                                 <Select
-                                sx={{height:'100%'}}
+                                sx={{height:'50px'}}
                                 labelId="demo-select-small-label"
                                 id="demo-select-small"
                                 value={lug}
@@ -189,10 +189,10 @@ export default function Productos() {
                                 </Select>    
                     </FormControl>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={6}>
                     <Button variant="contained"  sx={{padding: '10px' }} endIcon={<SearchIcon />} onClick={()=>{ filtrarTipoLadoLug(tipo, lado, lug) }} >filtrar</Button>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={6}>
                     <FormControl sx={{ marginTop: '25px' , width: '100%', paddingBottom: '25px'}}>
                     <Autocomplete
                     disablePortal
@@ -204,18 +204,13 @@ export default function Productos() {
                     />  
                     </FormControl>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={6}>
                     <Button variant="contained"  sx={{padding: '10px' }} endIcon={<SearchIcon />} onClick={ async ()=>{ 
                         setProductoUbi([]) 
-                        setIdg([])
+                        setProducto([])
                         let res = await getProducto(prod)
                         console.log(res);
-                        let response = await getUbiProducto(prod)
-                        console.log(response);
-                        if (response.length == 0 && res) {
-                            setProducto(res)
-                            console.log(res); 
-                        }
+                        setProducto(res) 
                         }} >buscar</Button>
                 </Grid>
             </Grid>
@@ -267,6 +262,29 @@ export default function Productos() {
                                 </Select>    
                     </FormControl>
                 </Grid>
+                <Grid item xs={6}>
+                    <FormControl sx={{ marginTop: '25px' , width: '100%', paddingBottom: '25px'}}>
+                                <InputLabel id="demo-select-small-label">Lugar</InputLabel>
+                                <Select
+                                sx={{height:'100%'}}
+                                labelId="demo-select-small-label"
+                                id="demo-select-small"
+                                value={lug}
+                                onChange={handleChangeLug}
+                                MenuProps={MenuProps}
+                                style={{width: '250px'}}
+                                >
+                                {lugs.map((name, index) => (
+                                    <MenuItem
+                                    key={index}
+                                    value={name.id}
+                                    >
+                                    {name.fullname}
+                                    </MenuItem>
+                                ))}
+                                </Select>    
+                    </FormControl>
+                </Grid>
                 <Grid item xs={2}>
                     <Button variant="contained"  sx={{padding: '10px' }} endIcon={<SearchIcon />} onClick={()=>{ filtrarTipoLadoLug(tipo, lado, lug) }} >filtrar</Button>
                 </Grid>
@@ -283,7 +301,18 @@ export default function Productos() {
                     </FormControl>
                 </Grid>
                 <Grid item xs={2}>
-                    <Button variant="contained"  sx={{padding: '10px', marginBottom: '15px'}} endIcon={<SearchIcon />} onClick={()=>{ setProductoUbi([]), getUbiProducto(prod)}} >buscar</Button>
+                    <Button variant="contained"  sx={{padding: '10px', marginBottom: '15px'}} endIcon={<SearchIcon />} onClick={async()=>{ 
+                        setProductoUbi([]) 
+                        setProducto([])
+                        let res = await getProducto(prod)
+                        console.log(res);
+                        let response = await getUbiProducto(prod)
+                        console.log(response);
+                        if (response.length == 0 && res) {
+                            setProducto(res)
+                            console.log(res); 
+                        }
+                        }} >buscar</Button>
                 </Grid>
             </Grid>
             <DataGrid sx={{height: '500px'}} rows={rows} columns={columns}  />

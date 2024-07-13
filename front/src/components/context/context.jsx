@@ -43,14 +43,16 @@ const CartProvider = ({children}) => {
   //obtener producto
   const [idg, setIdg] = useState('')
   const [producto, setProducto] = useState([])
-  const getProducto = async (idg) =>{
+  const getProducto = async (id) =>{
       try {
-          const response = await fetch(`http://localhost:8080/api/producto/${idg}`)
+          const response = await fetch(`http://localhost:8080/api/producto/${id}`)
           if (!response.ok) {
             throw new Error('problemas al consultar en la navegacion');
           }
           const data = await response.json();
           console.log(data);
+          console.log(data.IdGenerate);
+          setIdg(data.IdGenerate)
           return data
         } catch (error) {
           console.error('problemas con la consulta:', error);
@@ -97,7 +99,6 @@ const CartProvider = ({children}) => {
         
   }
 
-
   //crear producto
   //const [prodCreado, setPructoCreado] = useState(false)
   const createProducto = async ( data ) =>{
@@ -136,7 +137,52 @@ const CartProvider = ({children}) => {
         console.error('There was a problem with the fetch operation:', error);
         
     }
-}
+  }
+
+  //añadir producto a un lugar
+  const insertProdLug = async (data) => {
+    const {Idg, stock, Lugar} =  data
+    let info = {
+      "id_lugar": Lugar,
+      "stock": stock
+    }
+    try {
+      const response = await fetch(`http://localhost:8080/api/lugaresProd/addProductoLugar/${Idg}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(info)
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error);
+      
+  }
+  }
+
+  //actualizar stock del producto
+  const updateStockProduct = async (id) =>{
+    try {
+      const response = await fetch(`http://localhost:8080/api/lugaresProd/upDateStockProducto/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      console.log(response);
+      return response
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error);
+      
+  }
+  }
 
   // Filtro productos
   // rows (filas de la tabla) 
@@ -238,7 +284,12 @@ const CartProvider = ({children}) => {
   const [lug, setLug] = useState('')
   const [lado, setLado] = useState('')
   const [tipo, setTipo] = useState('')
+  const [ubi, setUbi] = useState(false)
+
   const refresh = () =>{
+    setUbi(false)
+    setIdg('')
+    setProducto([])
     setInfoprod([])
     setTipo('')
     setLado('')
@@ -281,6 +332,54 @@ const CartProvider = ({children}) => {
           icon: "success",
           title: "Producto Agregado"
         });
+    }else if (status == 'error') {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+      Toast.fire({
+        icon: "error",
+        title: "problemas al agregar producto"
+      });
+    }else if (status == 'warning') {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+      Toast.fire({
+        icon: "warning",
+        title: "producto no se encuentra en ningun lugar"
+      });
+    }else if (status == 'succesStock') {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+      Toast.fire({
+        icon: "success",
+        title: "Stock Actualizado"
+      });
     }
 }
       
@@ -300,8 +399,10 @@ const CartProvider = ({children}) => {
         getProductosLugar, productsLug, setProductsLug,
         filtrarTipoLadoLug, rows, setRows,
         refresh,
-        lug, setLug, lado, setLado, tipo, setTipo,
+        lug, setLug, lado, setLado, tipo, setTipo, ubi, setUbi,
         createProducto,
+        updateStockProduct,
+        insertProdLug,
         alert
       }} >
           {children}

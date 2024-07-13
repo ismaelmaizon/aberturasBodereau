@@ -3,16 +3,21 @@ import { useContext, useEffect, useState} from "react"
 import { MiContexto } from "../context/context"
 
 //lugares
-import { Box, Button, Card, CardActions, CardContent, Grid, Typography} from '@mui/material';
+import {Button, Card, CardActions, CardContent, Grid, Typography} from '@mui/material';
 //productos
 import Productos from "../productos/productos";
+import { Link } from "react-router-dom";
 
 
 
 export default function Inicio() {
     const {
+        getProductos,
         producto,
-        productoUbi, lugares, infoprod, setInfoprod
+        getUbiProducto, productoUbi, lugares, infoprod, setInfoprod, ubi, setUbi,
+        setIdg, alert,
+        updateStockProduct,
+        refresh
     } = useContext(MiContexto)
 
     const [ver, setVer] = useState(false)
@@ -40,7 +45,7 @@ export default function Inicio() {
             {producto.length == 0 ? <div></div> : <Card sx={{ maxWidth: 500, margin: 'auto', marginTop: '25px'  }}>
                 <CardContent>
                     <Typography gutterBottom variant="h6" component="div">
-                    El Producto no se encuentra en ningun lugar
+                    Informacion del Producto 
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                     Id Producto: {producto.IdGenerate}
@@ -56,16 +61,38 @@ export default function Inicio() {
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <Button size="small">Share</Button>
-                    <Button size="small">Learn More</Button>
+                    <Link to='/addproductLug' >
+                        <Button size="small" onClick={ async ()=>{
+                            setIdg(producto.IdGenerate)
+                        }} >agaregara a lugar</Button>
+                    </Link>
+                        <Button size="small" onClick={ async ()=>{
+                            const response = await updateStockProduct(producto.IdGenerate)
+                            if (response) {
+                                alert('succesStock')
+                                refresh()
+                                getProductos()
+                                setVer(false)
+                            }
+                        }} >actualizar su stock</Button>
+                        <Button size="small" onClick={ async ()=>{
+                            const response = await getUbiProducto(producto.IdGenerate)
+                            if (response.length == 0) {
+                                setUbi(false)
+                                alert('warning')
+                            }else{
+                                setUbi(true)
+                            }
+                        }} >ver Ubicaciones</Button>
+                    
                 </CardActions>
                 </Card>
              }
             {
-             productoUbi.length == 0 ? <div></div> : <div style={{ display: 'flex', margin: 'auto', padding: '15px' }} >{
+             !ubi ? <div></div> : <div style={{ display: 'flex', margin: 'auto', padding: '15px' }} >{
                 infoprod.map((prod, index)=>{
                             console.log(prod);
-                            return ( <Box key={index} sx={{ margin: 'auto', backgroundColor:'#ec407a' , borderRadius: '10px' }}  >
+                            return ( <Card key={index} sx={{ maxWidth: 500, margin: 'auto', marginTop: '25px'  }}  >
                                         <Grid container direction="row" justifyContent="center" alignItems="center" >
                                                     <Grid item xs={15}>
                                                         <CardContent>
@@ -77,12 +104,16 @@ export default function Inicio() {
                                                             </p>
                                                         </CardContent>
                                                         <CardActions>
-                                                            <Button size="medium" sx={{ margin: 'auto', backgroundColor: '#1769aa', color: 'white' }} >Actualizar Stock</Button>
+                                                            <Link to='/addproductLug' >
+                                                                <Button size="medium" sx={{ margin: 'auto', backgroundColor: '#1769aa', color: 'white' }} onClick={()=>{
+                                                                    setIdg(producto.IdGenerate)
+                                                                }} >Actualizar Stock</Button>
+                                                            </Link>
                                                             <Button size="medium" sx={{ margin: 'auto', backgroundColor: '#1769aa', color: 'white' }} >Eliminar del Lugar</Button>
                                                         </CardActions>
                                                     </Grid>
                                         </Grid>
-                                    </Box>)
+                                    </Card>)
                         })
                 } </div>   
             }

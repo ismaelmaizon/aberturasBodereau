@@ -9,6 +9,7 @@ import Inicio from './components/inicio/inicio.jsx'
 import NavBar from './components/navbar/navBar.jsx'
 import AddProducto from './components/addproduct/addproducto.jsx'
 import clases from './App.module.css'
+import AddProductLug from './components/addproductLug/addproductLug.jsx'
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
             <Routes>
               <Route element={<Inicio/>} path='/' ></Route>
               <Route element={<AddProducto/>} path='/addproducto' ></Route>
+              <Route element={<AddProductLug/>} path='/addproductLug' ></Route>
             </Routes>
           </div>
         </CartProvider>
