@@ -43,30 +43,38 @@ export default function Inicio() {
         <div>
             <div>
             {producto.length == 0 ? <div></div> : <Card sx={{ maxWidth: 500, margin: 'auto', marginTop: '25px'  }}>
-                <CardContent>
-                    <Typography gutterBottom variant="h6" component="div">
-                    Informacion del Producto 
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                    Id Producto: {producto.IdGenerate}
-                    </Typography>
-                    <Typography  variant="body2" color="text.secondary">
-                    Descripcion: {producto.Descripcion}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                    Precio: {producto.Precio_U}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                    Stock: {producto.stock}
-                    </Typography>
-                </CardContent>
+                <Grid container direction='row' alignItems='center'>
+                    <CardContent>
+                        <Typography gutterBottom variant="h6" component="div">
+                        Informacion del Producto 
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                        Id Producto: {producto.IdGenerate}
+                        </Typography>
+                        <Typography  variant="body2" color="text.secondary">
+                        Descripcion: {producto.Descripcion}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                        Precio: {producto.Precio_U}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                        Stock: {producto.stock}
+                        </Typography>
+                    </CardContent>
+                    <Link to='/registrarVenta' >
+                        <Button size="md" color="error" variant="contained"  >
+                            Vender Producto
+                        </Button>
+                    </Link>
+                    
+                </Grid>
                 <CardActions>
                     <Link to='/addproductLug' >
-                        <Button size="small" onClick={ async ()=>{
+                        <Button size="small" color="info" variant="contained" onClick={ async ()=>{
                             setIdg(producto.IdGenerate)
                         }} >agaregara a lugar</Button>
                     </Link>
-                        <Button size="small" onClick={ async ()=>{
+                        <Button size="small" color="info" variant="contained"onClick={ async ()=>{
                             const response = await updateStockProduct(producto.IdGenerate)
                             if (response) {
                                 alert('succesStock')
@@ -75,7 +83,7 @@ export default function Inicio() {
                                 setVer(false)
                             }
                         }} >actualizar su stock</Button>
-                        <Button size="small" onClick={ async ()=>{
+                        <Button size="small" color="info" variant="contained" onClick={ async ()=>{
                             const response = await getUbiProducto(producto.IdGenerate)
                             if (response.length == 0) {
                                 setUbi(false)
@@ -104,7 +112,7 @@ export default function Inicio() {
                                                             </p>
                                                         </CardContent>
                                                         <CardActions>
-                                                            <Link to='/addproductLug' >
+                                                            <Link to='/updateproductLug' >
                                                                 <Button size="medium" sx={{ margin: 'auto', backgroundColor: '#1769aa', color: 'white' }} onClick={()=>{
                                                                     setIdg(producto.IdGenerate)
                                                                 }} >Actualizar Stock</Button>

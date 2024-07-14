@@ -164,6 +164,32 @@ const CartProvider = ({children}) => {
   }
   }
 
+  //actulizar producto en un lugar
+  const updateproductolugar = async (data) => {
+    const {Idg, stock, Lugar, procedimiento} =  data
+    let info = {
+      "id_lugar": Lugar,
+      "stock": stock,
+      "procedimiento": procedimiento,
+    }
+    try {
+      const response = await fetch(`http://localhost:8080/api/lugaresProd/updateProductoLugar/${Idg}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(info)
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error);
+      
+  }
+  }
+
   //actualizar stock del producto
   const updateStockProduct = async (id) =>{
     try {
@@ -280,6 +306,49 @@ const CartProvider = ({children}) => {
     setRows(prods);
   };
 
+  //Registrar Venta
+  const [cart, setCart] = useState([])
+  const [cartNum, setCartNum] = useState(0)
+  const registrarVenta = async (data) => {
+    const {
+      id_producto, 
+      Idg, 
+      Tipo, 
+      stock,
+      nombre,
+      apellido,
+      mail,
+      cel
+    } =  data
+
+    let info = {
+      "id_producto": id_producto,
+      "IdGenerate": Idg,
+      "Tipo": Tipo,
+      "cantidad": stock,
+      "nombre": nombre,
+      "apellido": apellido,
+      "mail": mail,
+      "cel": cel
+    }
+    try {
+      const response = await fetch(`http://localhost:8080/api/ventas/registrarVenta/${Idg}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(info)
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error);
+      
+  }
+  }
+
   // Limpiar Filtro
   const [lug, setLug] = useState('')
   const [lado, setLado] = useState('')
@@ -385,8 +454,10 @@ const CartProvider = ({children}) => {
       
 
   useEffect(()=>{
-    getProductos(),
+    getProductos()
     getLugares()
+    let num = cart.length
+    setCartNum(num)
   },[])
 
   return (
@@ -402,7 +473,8 @@ const CartProvider = ({children}) => {
         lug, setLug, lado, setLado, tipo, setTipo, ubi, setUbi,
         createProducto,
         updateStockProduct,
-        insertProdLug,
+        insertProdLug, updateproductolugar,
+        registrarVenta, cart, setCart, cartNum,
         alert
       }} >
           {children}

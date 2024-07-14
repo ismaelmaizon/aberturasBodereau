@@ -82,27 +82,53 @@ export const updateproductolugar = async (req, res) =>{
                 [id_lugar, id_producto, stock ])
             res.send( {status: 200, message: 'succes', response: row} );
         }else{
-            let value = false
-            for (let i = 0; i < exists.length; i++){
-                let prod = exists[i]
-                if (prod.id_lugar == id_lugar) {
-                    value = false
-                    newStock = parseInt(stock);
-                    id = prod.id
-                    break  //fin de la iteracion
-                }else{
-                    value = true
+            let p = procedimiento.toLowerCase()
+            if (p == 'agregar')  {
+                let value = false
+                for (let i = 0; i < exists.length; i++){
+                    let prod = exists[i]
+                    if (prod.id_lugar == id_lugar) {
+                        value = false
+                        newStock = parseInt(prod.stock) + parseInt(stock)
+                        id = prod.id
+                        break  //fin de la iteracion
+                    }else{
+                        value = true
+                    }
                 }
-            }
-            if(value){
-                //agregar producto a un lugar
-            const [row] = await pool.query("INSERT INTO lugaresProducto (id_lugar, id_producto, stock) VALUES(?, ?, ?)",
-                [id_lugar, id_producto, stock ])
-            res.send( {status: 200, message: 'succes', response: row} );
-            }else{
-                //actualizar stock en lugar
-                const [updateStock] = await pool.query("UPDATE lugaresProducto SET stock = ? WHERE id = ?", [newStock, id])
-                res.send( {status: 200, message: 'succes', response: updateStock} );
+                if(value){
+                    //agregar producto a un lugar
+                const [row] = await pool.query("INSERT INTO lugaresProducto (id_lugar, id_producto, stock) VALUES(?, ?, ?)",
+                    [id_lugar, id_producto, stock ])
+                res.send( {status: 200, message: 'succes', response: row} );
+                }else{
+                    //actualizar stock en lugar
+                    const [updateStock] = await pool.query("UPDATE lugaresProducto SET stock = ? WHERE id = ?", [newStock, id])
+                    res.send( {status: 200, message: 'succes', response: updateStock} );
+                }
+            } else { 
+                let value = false
+                for (let i = 0; i < exists.length; i++){
+                    let prod = exists[i]
+                    if (prod.id_lugar == id_lugar) {
+                        value = false
+                        newStock = parseInt(prod.stock) - parseInt(stock)
+                        id = prod.id
+                        break  //fin de la iteracion
+                    }else{
+                        value = true
+                    }
+                }
+                if(value){
+                    //agregar producto a un lugar
+                const [row] = await pool.query("INSERT INTO lugaresProducto (id_lugar, id_producto, stock) VALUES(?, ?, ?)",
+                    [id_lugar, id_producto, stock ])
+                res.send( {status: 200, message: 'succes', response: row} );
+                }else{
+                    //actualizar stock en lugar
+                    const [updateStock] = await pool.query("UPDATE lugaresProducto SET stock = ? WHERE id = ?", [newStock, id])
+                    res.send( {status: 200, message: 'succes', response: updateStock} );
+                }
             }
         };
     }catch(error) {

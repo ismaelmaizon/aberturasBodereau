@@ -2,19 +2,24 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Fragment,useState } from 'react';
+import { Fragment,useContext,useState } from 'react';
 import { Button, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import DensityMediumIcon from '@mui/icons-material/DensityMedium';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import BackupIcon from '@mui/icons-material/Backup';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 //import Link from '@mui/material/Link';
 import { Link } from 'react-router-dom';
+import { MiContexto } from '../context/context';
 
 
 
 export default function NavBar() {
+
+    const {cartNum } = useContext(MiContexto)
+
     //despliegue getProductosLugar
     const [state, setState] = useState({
       top: false,
@@ -91,6 +96,10 @@ export default function NavBar() {
           </Link>
           
           <Box sx={{ flexGrow: 1 }} /> {/* sirve para generar el espacio */ }
+          
+          <Button sx={{color: 'white'}} >
+            <AddShoppingCartIcon/> {cartNum}
+          </Button>
         </Toolbar>
       </AppBar>
       {/*renderMobileMenu*/}

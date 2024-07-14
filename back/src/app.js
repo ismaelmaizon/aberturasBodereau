@@ -5,6 +5,7 @@ import cors from 'cors';
 import productosRoutes from "./routes/productos.routes.js"
 import lugaresRoutes from "./routes/lugares.routes.js"
 import lugaresRoutesProd from "./routes/lugaresProd.routes.js"
+import ventasRoutes from "./routes/ventas.routes.js"
 
 const app = express();
 const corsOptions = {
@@ -26,6 +27,7 @@ app.use(express.json());
 app.use("/api", productosRoutes);
 app.use("/api/lugares", lugaresRoutes);
 app.use("/api/lugaresProd", lugaresRoutesProd);
+app.use("/api/ventas", ventasRoutes);
 
 
 app.use((req, res, next) => {
