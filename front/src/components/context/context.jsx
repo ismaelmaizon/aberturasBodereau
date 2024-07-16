@@ -308,7 +308,6 @@ const CartProvider = ({children}) => {
 
   //Registrar Venta
   const [cart, setCart] = useState([])
-  const [cartNum, setCartNum] = useState(0)
   const registrarVenta = async (data) => {
     const {
       id_producto, 
@@ -347,6 +346,13 @@ const CartProvider = ({children}) => {
       console.error('There was a problem with the fetch operation:', error);
       
   }
+  }
+
+  //añadir producto a SessionStorage
+  const addProdSessionStorage = async (producto) =>{
+    sessionStorage.setItem(producto.IdGenerate, producto.IdGenerate)
+    let res = sessionStorage.getItem(producto.IdGenerate)
+    return  res
   }
 
   // Limpiar Filtro
@@ -456,8 +462,6 @@ const CartProvider = ({children}) => {
   useEffect(()=>{
     getProductos()
     getLugares()
-    let num = cart.length
-    setCartNum(num)
   },[])
 
   return (
@@ -474,7 +478,8 @@ const CartProvider = ({children}) => {
         createProducto,
         updateStockProduct,
         insertProdLug, updateproductolugar,
-        registrarVenta, cart, setCart, cartNum,
+        registrarVenta, cart, setCart,
+        addProdSessionStorage,
         alert
       }} >
           {children}

@@ -8,8 +8,6 @@ import {Button, Card, CardActions, CardContent, Grid, Typography} from '@mui/mat
 import Productos from "../productos/productos";
 import { Link } from "react-router-dom";
 
-
-
 export default function Inicio() {
     const {
         getProductos,
@@ -17,11 +15,12 @@ export default function Inicio() {
         getUbiProducto, productoUbi, lugares, infoprod, setInfoprod, ubi, setUbi,
         setIdg, alert,
         updateStockProduct,
+        setCart,
+        addProdSessionStorage,
         refresh
     } = useContext(MiContexto)
 
     const [ver, setVer] = useState(false)
-
     
     useEffect(()=>{
         let info = []
@@ -61,11 +60,24 @@ export default function Inicio() {
                         Stock: {producto.stock}
                         </Typography>
                     </CardContent>
-                    <Link to='/registrarVenta' >
-                        <Button size="md" color="error" variant="contained"  >
-                            Vender Producto
-                        </Button>
-                    </Link>
+                    <Button size="md" color="error" variant="contained" onClick={async ()=>{
+                        let res = await addProdSessionStorage(producto)  
+                        if (res) {
+                            alert('success')
+                            const carrito = []
+                            for (let i = 0; i < sessionStorage.length; i++) {
+                                let items = {};
+                                let clave = sessionStorage.key(i);
+                                let valor = sessionStorage.getItem(clave);
+                                items = { clave: clave, valor: valor }
+                                carrito.push(items)
+                            }
+                            setCart(carrito) 
+                            refresh()  
+                        }
+                    }} >
+                        agregar al carrito
+                    </Button>
                     
                 </Grid>
                 <CardActions>

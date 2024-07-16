@@ -2,7 +2,7 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Fragment,useContext,useState } from 'react';
+import { Fragment,useContext,useEffect,useState } from 'react';
 import { Button, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import DensityMediumIcon from '@mui/icons-material/DensityMedium';
 import AddIcon from '@mui/icons-material/Add';
@@ -18,7 +18,7 @@ import { MiContexto } from '../context/context';
 
 export default function NavBar() {
 
-    const {cartNum } = useContext(MiContexto)
+    const { cart } = useContext(MiContexto)
 
     //despliegue getProductosLugar
     const [state, setState] = useState({
@@ -68,6 +68,12 @@ export default function NavBar() {
       </Box>
     );
 
+
+    useEffect(()=>{
+      //obtenerTodosLosItems()
+      console.log(cart);
+    }, [])
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -97,9 +103,11 @@ export default function NavBar() {
           
           <Box sx={{ flexGrow: 1 }} /> {/* sirve para generar el espacio */ }
           
-          <Button sx={{color: 'white'}} >
-            <AddShoppingCartIcon/> {cartNum}
-          </Button>
+          <Link to={'/dashboard'} >
+            <Button sx={{color: 'white'}} >
+                <AddShoppingCartIcon/> {cart.length}
+            </Button>
+          </Link>
         </Toolbar>
       </AppBar>
       {/*renderMobileMenu*/}
