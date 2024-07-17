@@ -351,8 +351,7 @@ const CartProvider = ({children}) => {
   //añadir producto a SessionStorage
   const addProdSessionStorage = async (producto) =>{
     sessionStorage.setItem(producto.IdGenerate, producto.IdGenerate)
-    let res = sessionStorage.getItem(producto.IdGenerate)
-    return  res
+    
   }
 
   // Limpiar Filtro

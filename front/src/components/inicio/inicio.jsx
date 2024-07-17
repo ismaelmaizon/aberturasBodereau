@@ -7,6 +7,8 @@ import {Button, Card, CardActions, CardContent, Grid, Typography} from '@mui/mat
 //productos
 import Productos from "../productos/productos";
 import { Link } from "react-router-dom";
+//alert
+import Swal from 'sweetalert2'
 
 export default function Inicio() {
     const {
@@ -15,10 +17,11 @@ export default function Inicio() {
         getUbiProducto, productoUbi, lugares, infoprod, setInfoprod, ubi, setUbi,
         setIdg, alert,
         updateStockProduct,
-        setCart,
-        addProdSessionStorage,
+        cart, setCart,
         refresh
     } = useContext(MiContexto)
+
+    
 
     const [ver, setVer] = useState(false)
     
@@ -60,25 +63,6 @@ export default function Inicio() {
                         Stock: {producto.stock}
                         </Typography>
                     </CardContent>
-                    <Button size="md" color="error" variant="contained" onClick={async ()=>{
-                        let res = await addProdSessionStorage(producto)  
-                        if (res) {
-                            alert('success')
-                            const carrito = []
-                            for (let i = 0; i < sessionStorage.length; i++) {
-                                let items = {};
-                                let clave = sessionStorage.key(i);
-                                let valor = sessionStorage.getItem(clave);
-                                items = { clave: clave, valor: valor }
-                                carrito.push(items)
-                            }
-                            setCart(carrito) 
-                            refresh()  
-                        }
-                    }} >
-                        agregar al carrito
-                    </Button>
-                    
                 </Grid>
                 <CardActions>
                     <Link to='/addproductLug' >
@@ -130,6 +114,38 @@ export default function Inicio() {
                                                                 }} >Actualizar Stock</Button>
                                                             </Link>
                                                             <Button size="medium" sx={{ margin: 'auto', backgroundColor: '#1769aa', color: 'white' }} >Eliminar del Lugar</Button>
+                                                            <Button size="md" color="error" variant="contained" onClick={async ()=>{
+                                                                Swal.fire({
+                                                                    title: "Ingrese cantidad",
+                                                                    input: "text",
+                                                                    inputAttributes: {
+                                                                      autocapitalize: "off"
+                                                                    },
+                                                                    showCancelButton: true,
+                                                                    confirmButtonText: "aceptar",
+                                                                    showLoaderOnConfirm: true,
+                                                                  }).then( async (result) => {
+                                                                    if (result.isConfirmed && result.value < prod.stock ) {
+                                                                        alert('success')
+                                                                        const carrito = []
+                                                                        cart.map((el)=>{
+                                                                            carrito.push(el)
+                                                                        })
+                                                                        const info = {
+                                                                            id : producto.IdGenerate,
+                                                                            lugar : prod.fullname,
+                                                                            cantidad : result.value
+                                                                        }
+                                                                        carrito.push(info)                    
+                                                                        setCart(carrito) 
+                                                                        refresh()  
+                                                                        
+                                                                    }else{ alert('error') }
+                                                                  });
+                                                                
+                                                            }} >
+                                                                agregar al carrito
+                                                            </Button>
                                                         </CardActions>
                                                     </Grid>
                                         </Grid>
