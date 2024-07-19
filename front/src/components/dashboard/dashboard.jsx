@@ -3,16 +3,16 @@ import { useContext, useEffect, useState } from "react";
 import { MiContexto } from "../context/context";
 import { useNavigate } from "react-router-dom";
 import DeleteIcon from '@mui/icons-material/Delete';
+import SendIcon from '@mui/icons-material/Send';
 
 
 
 export default function Dashboard () {
 
-    const {lugares, productos ,cart} = useContext(MiContexto)
+    const {lugares, productos ,cart, setCart} = useContext(MiContexto)
 
     
-    const [prods, setProds] = useState([])
-    const [viwer, setViwer] = useState([])
+    const [total, setTotal] = useState(0)
 
     
 
@@ -20,18 +20,38 @@ export default function Dashboard () {
         console.log(cart);
         console.log(productos);
         console.log(lugares);
+        let newCart = []
+        let full = 0
+        productos.map((prod)=>{
+            console.log(prod)
+            cart.map((prodc)=>{
+                console.log(prodc);
+                if (prod.IdGenerate == prodc.id ) {
+                    let newProd = {
+                        id: prod.IdGenerate,
+                        lugar: prodc.lugar,
+                        cantidad: prodc.cantidad,
+                        subTotal: prod.Precio_U * prodc.cantidad
+                    }
+                    full += newProd.subTotal
+                    newCart.push(newProd)
+                }
+
+            })  
+        })
+        setCart(newCart)
+        setTotal(full)
     }, [])
 
     return(
         <div>
             {
                 cart.length == 0 ? <Typography> El carrito se encuentra vacio </Typography> : 
-                <Box sx={{ width: '60%', display: 'flex', flexDirection: 'column', margin: 'auto', marginTop: '120px', padding: '15px' }} border='solid' >
-                    <Grid>
-                        <Grid container  >
-                            <Typography  >Dashboard</Typography>
+                <Box sx={{ width: '60%', display: 'flex', flexDirection: 'column', margin: 'auto', marginTop: '120px', padding: '15px' }} border='solid 0px' boxShadow='5px 2px 15px' >
+                        <Grid margin='auto' >
+                            <Typography fontSize={30} >Vista Previa</Typography>
                         </Grid>
-                        <Grid container direction='column' border='solid' padding={2} >
+                        <Grid container direction='column' padding={2} >
                             {
                             cart.map((el, index)=>{ 
                                 return <Grid item xs={2} sm={4} md={4} key={index} 
@@ -55,7 +75,7 @@ export default function Dashboard () {
                                             </Grid>
                                             <Grid item xs={4} color='black'>
                                                 <Typography >
-                                                    SubTotal: 
+                                                    SubTotal: {el.subTotal}
                                                 </Typography>
                                             </Grid>
                                             <Grid item xs={2} color='black' alignSelf='flex-end' >
@@ -67,10 +87,18 @@ export default function Dashboard () {
                             })
                             }
                         </Grid>
-                        <Grid marginTop={2} >
-                            Total: 
+                        <Grid container item xs={2} sm={4} md={4} marginLeft={2} marginTop={2} direction='row' width='100%' >
+                            <Grid item xs={10}>
+                                <Typography fontSize={20} >
+                                    Total: {total}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={10} >
+                                <Button startIcon={<SendIcon/>} >
+                                    Vender 
+                                </Button>
+                            </Grid>
                         </Grid>
-                    </Grid>
                 </Box>
             
             }
