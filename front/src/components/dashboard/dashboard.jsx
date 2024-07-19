@@ -9,7 +9,9 @@ import SendIcon from '@mui/icons-material/Send';
 
 export default function Dashboard () {
 
-    const {lugares, productos ,cart, setCart} = useContext(MiContexto)
+    const {lugares, productos ,cart, setCart,
+        updateproductolugar
+    } = useContext(MiContexto)
 
     
     const [total, setTotal] = useState(0)
@@ -23,20 +25,19 @@ export default function Dashboard () {
         let newCart = []
         let full = 0
         productos.map((prod)=>{
-            console.log(prod)
             cart.map((prodc)=>{
-                console.log(prodc);
                 if (prod.IdGenerate == prodc.id ) {
                     let newProd = {
                         id: prod.IdGenerate,
                         lugar: prodc.lugar,
+                        id_lugar: prodc.id_lugar,
                         cantidad: prodc.cantidad,
                         subTotal: prod.Precio_U * prodc.cantidad
                     }
                     full += newProd.subTotal
+                    console.log(newProd);
                     newCart.push(newProd)
                 }
-
             })  
         })
         setCart(newCart)
@@ -94,7 +95,20 @@ export default function Dashboard () {
                                 </Typography>
                             </Grid>
                             <Grid item xs={10} >
-                                <Button startIcon={<SendIcon/>} >
+                                <Button startIcon={<SendIcon/>} onClick={()=>{
+                                    console.log(cart);
+                                    cart.map( async (el)=>{
+                                        console.log(el);
+                                        let update = {
+                                            Idg: el.id, 
+                                            stock: el.cantidad, 
+                                            Lugar: el.id_lugar, 
+                                            procedimiento: 'quitar'
+                                        }
+                                        let response = await updateproductolugar(update)
+                                        console.log(response);
+                                    })
+                                }} >
                                     Vender 
                                 </Button>
                             </Grid>

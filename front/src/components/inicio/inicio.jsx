@@ -30,7 +30,7 @@ export default function Inicio() {
         lugares.map((lug)=>{
             productoUbi.map((pr)=>{
                 if (lug.id == pr.id_lugar) {
-                    let resul = { fullname : lug.fullname, stock: pr.stock }
+                    let resul = { fullname : lug.fullname, stock: pr.stock, id_lugar: lug.id }
                     info.push(resul)
                 }
             })
@@ -134,6 +134,7 @@ export default function Inicio() {
                                                                         const info = {
                                                                             id : producto.IdGenerate,
                                                                             lugar : prod.fullname,
+                                                                            id_lugar : prod.id_lugar,
                                                                             cantidad : result.value
                                                                         }
                                                                         carrito.push(info)                    

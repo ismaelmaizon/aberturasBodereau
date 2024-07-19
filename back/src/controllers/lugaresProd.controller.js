@@ -107,9 +107,12 @@ export const updateproductolugar = async (req, res) =>{
                     res.send( {status: 200, message: 'succes', response: updateStock} );
                 }
             } else { 
+                console.log('else');
                 let value = false
                 for (let i = 0; i < exists.length; i++){
                     let prod = exists[i]
+                    console.log(prod.id_lugar);
+                    console.log(id_lugar);
                     if (prod.id_lugar == id_lugar) {
                         value = false
                         newStock = parseInt(prod.stock) - parseInt(stock)
@@ -123,8 +126,10 @@ export const updateproductolugar = async (req, res) =>{
                     //agregar producto a un lugar
                 const [row] = await pool.query("INSERT INTO lugaresProducto (id_lugar, id_producto, stock) VALUES(?, ?, ?)",
                     [id_lugar, id_producto, stock ])
-                res.send( {status: 200, message: 'succes', response: row} );
+                    res.send( {status: 200, message: 'succes', response: row} );
                 }else{
+                    console.log('update');
+
                     //actualizar stock en lugar
                     const [updateStock] = await pool.query("UPDATE lugaresProducto SET stock = ? WHERE id = ?", [newStock, id])
                     res.send( {status: 200, message: 'succes', response: updateStock} );
