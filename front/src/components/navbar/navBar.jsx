@@ -103,7 +103,7 @@ export default function NavBar() {
           
           <Box sx={{ flexGrow: 1 }} /> {/* sirve para generar el espacio */ }
           
-          <Link to={'/dashboard'} >
+          <Link to={'/preview'} >
             <Button sx={{color: 'white'}} >
                 <AddShoppingCartIcon/> {cart.length}
             </Button>

@@ -11,7 +11,7 @@ import AddProducto from './components/addproduct/addproducto.jsx'
 import clases from './App.module.css'
 import AddProductLug from './components/addproductLug/addproductLug.jsx'
 import UpdateProductLug from './components/updateproductLug/updateproductLug.jsx'
-import Dashboard from './components/dashboard/dashboard.jsx'
+import Preview from './components/preview/preview.jsx'
 
 
 
@@ -35,7 +35,7 @@ function App() {
               <Route element={<AddProducto/>} path='/addproducto' ></Route>
               <Route element={<AddProductLug/>} path='/addproductLug' ></Route>
               <Route element={<UpdateProductLug/>} path='/updateproductLug' ></Route>
-              <Route element={<Dashboard/>} path='/dashboard' ></Route>
+              <Route element={<Preview/>} path='/preview' ></Route>
             </Routes>
           </div>
         </CartProvider>

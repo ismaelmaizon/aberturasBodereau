@@ -183,6 +183,7 @@ const CartProvider = ({children}) => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+      console.log(response.status);
       return response
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
@@ -308,43 +309,26 @@ const CartProvider = ({children}) => {
   //Registrar Venta
   const [cart, setCart] = useState([])
   const registrarVenta = async (data) => {
-    const {
-      id_producto, 
-      Idg, 
-      Tipo, 
-      stock,
-      nombre,
-      apellido,
-      mail,
-      cel
-    } =  data
-
-    let info = {
-      "id_producto": id_producto,
-      "IdGenerate": Idg,
-      "Tipo": Tipo,
-      "cantidad": stock,
-      "nombre": nombre,
-      "apellido": apellido,
-      "mail": mail,
-      "cel": cel
-    }
+    console.log(data);
     try {
-      const response = await fetch(`http://localhost:8080/api/ventas/registrarVenta/${Idg}`, {
+      const response = await fetch(`http://localhost:8080/api/ventas/registrarVenta`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(info)
+        body: JSON.stringify(data)
       });
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+      console.log(response);
+      console.log(response.data);
+      console.log(response.data);
       return response
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
       
-  }
+    }
   }
 
   //añadir producto a SessionStorage
@@ -403,7 +387,7 @@ const CartProvider = ({children}) => {
         });
         Toast.fire({
           icon: "success",
-          title: "Producto Agregado"
+          title: "Proceso exitoso"
         });
     }else if (status == 'error') {
       const Toast = Swal.mixin({
@@ -419,7 +403,7 @@ const CartProvider = ({children}) => {
       });
       Toast.fire({
         icon: "error",
-        title: "problemas al agregar producto"
+        title: "Problemas con el proceso"
       });
     }else if (status == 'warning') {
       const Toast = Swal.mixin({

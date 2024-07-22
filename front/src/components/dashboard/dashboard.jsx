@@ -1,121 +1,106 @@
 import { Box, Button, Grid, MenuItem, TextField, Typography } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { MiContexto } from "../context/context";
 import { useNavigate } from "react-router-dom";
-import DeleteIcon from '@mui/icons-material/Delete';
-import SendIcon from '@mui/icons-material/Send';
 
 
 
-export default function Dashboard () {
 
-    const {lugares, productos ,cart, setCart,
-        updateproductolugar
-    } = useContext(MiContexto)
+export default function AddProducto () {
 
-    
-    const [total, setTotal] = useState(0)
+    const {createProducto, alert} = useContext(MiContexto)
 
-    
+    const router = useNavigate()
 
-    useEffect(()=>{
-        console.log(cart);
-        console.log(productos);
-        console.log(lugares);
-        let newCart = []
-        let full = 0
-        productos.map((prod)=>{
-            cart.map((prodc)=>{
-                if (prod.IdGenerate == prodc.id ) {
-                    let newProd = {
-                        id: prod.IdGenerate,
-                        lugar: prodc.lugar,
-                        id_lugar: prodc.id_lugar,
-                        cantidad: prodc.cantidad,
-                        subTotal: prod.Precio_U * prodc.cantidad
-                    }
-                    full += newProd.subTotal
-                    console.log(newProd);
-                    newCart.push(newProd)
-                }
-            })  
-        })
-        setCart(newCart)
-        setTotal(full)
-    }, [])
+    const [data, setData] = useState({
+        Tipo: '',
+        Descripcion: '',
+        Alto: '',
+        Ancho: '',
+        Lado: '',
+        stock: 0,
+        Precio_U: 0,
+
+    });
+
+    const lado = [
+        {
+          name: 'Derc'
+        },
+        {
+          name: 'Izq'
+        }
+    ];
+
+    const dataFrom = async (event) => {
+        event.preventDefault()
+        setData( {...data, [event.target.name]: event.target.value  } )
+    }
+
+    const handleSubmit = (e) =>{
+        e.preventDefault();
+        console.log(data);
+    }
+
 
     return(
-        <div>
-            {
-                cart.length == 0 ? <Typography> El carrito se encuentra vacio </Typography> : 
-                <Box sx={{ width: '60%', display: 'flex', flexDirection: 'column', margin: 'auto', marginTop: '120px', padding: '15px' }} border='solid 0px' boxShadow='5px 2px 15px' >
-                        <Grid margin='auto' >
-                            <Typography fontSize={30} >Vista Previa</Typography>
+        <Box sx={{ width: '60%', margin: 'auto', marginTop: '120px', padding: '15px' }} >
+            <Typography variant="h4" gutterBottom>
+                Agregar nuevo producto
+            </Typography>
+            <Box component='form' onSubmit={handleSubmit} display={'flex'} flexDirection={'column'} >
+                <Grid container direction="row" >
+                    <Grid container direction="column" rowSpacing={1} spacing={5}>
+                        <Grid item xs={6}>
+                        <TextField fullWidth label='Tipo' name='Tipo' type="text" onChange={dataFrom}></TextField>
                         </Grid>
-                        <Grid container direction='column' padding={2} >
-                            {
-                            cart.map((el, index)=>{ 
-                                return <Grid item xs={2} sm={4} md={4} key={index} 
-                                            container direction="row" color='grey.300' gap={5}
-                                            border='solid 0px' boxShadow='5px 0px 12px 2px' borderRadius={3} margin={1}
-                                            padding={2}>
-                                            
-                                            <Grid item xs={4} color='black' >
-                                                <Typography paddingBottom={1} alignSelf='flex-start'>
-                                                    Producto:  
-                                                </Typography> 
-                                                <Typography >
-                                                    ID: {el.id} 
-                                                </Typography> 
-                                                <Typography >
-                                                    Lugar: {el.lugar} 
-                                                </Typography> 
-                                                <Typography >
-                                                    Cant: {el.cantidad} 
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item xs={4} color='black'>
-                                                <Typography >
-                                                    SubTotal: {el.subTotal}
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item xs={2} color='black' alignSelf='flex-end' >
-                                                <Button startIcon={<DeleteIcon/>} >
-                                                    Delete 
-                                                </Button>
-                                            </Grid>
-                                    </Grid>
-                            })
-                            }
+                        <Grid item xs={6}>
+                        <TextField fullWidth label='Descripcion' name='Descripcion' type="text" onChange={dataFrom}></TextField>
                         </Grid>
-                        <Grid container item xs={2} sm={4} md={4} marginLeft={2} marginTop={2} direction='row' width='100%' >
-                            <Grid item xs={10}>
-                                <Typography fontSize={20} >
-                                    Total: {total}
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={10} >
-                                <Button startIcon={<SendIcon/>} onClick={()=>{
-                                    console.log(cart);
-                                    cart.map( async (el)=>{
-                                        console.log(el);
-                                        let update = {
-                                            Idg: el.id, 
-                                            stock: el.cantidad, 
-                                            Lugar: el.id_lugar, 
-                                            procedimiento: 'quitar'
-                                        }
-                                        let response = await updateproductolugar(update)
-                                        console.log(response);
-                                    })
-                                }} >
-                                    Vender 
-                                </Button>
-                            </Grid>
+                        <Grid item xs={6}>
+                        <TextField fullWidth label='Alto' name='Alto' type="text" onChange={dataFrom}></TextField>
                         </Grid>
-                </Box>
-            
-            }
-        </div>
-    ) 
-} 
+                        <Grid item xs={6}>
+                        <TextField fullWidth label='Ancho' name='Ancho' type="text" onChange={dataFrom}></TextField>
+                        </Grid>
+                    </Grid>
+                    <Grid container direction="column" columnSpacing={1} spacing={0}>
+                        <Grid item xs={10} >
+                        <TextField fullWidth label='Stock' name='stock' type="text" onChange={dataFrom}></TextField>
+                        </Grid>
+                        <Grid item xs={10}>
+                        <TextField fullWidth label='Precio_U' name='Precio_U' type="text" onChange={dataFrom}></TextField>
+                        </Grid>
+                        <Grid item xs={10}>
+                        <TextField
+                            fullWidth
+                            sx={{height: '0px'}}
+                            id="outlined-select-currency"
+                            select
+                            label="Lado"
+                            name="Lado"
+                            helperText="Please select your lado"
+                            onChange={dataFrom}
+                            >
+                            {lado.map((option, index) => (
+                                <MenuItem key={index} value={option.name}>
+                                {option.name}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            <Button type="submit" onClick={ async ()=>{
+                console.log(data);
+                let respon = await createProducto(data)
+                console.log(respon.status);
+                if (respon.status == 200) {
+                    await alert('success')
+                    router('/')
+                }
+            }} sx={{ width: '45%', height: '50px', backgroundColor: 'Black', margin: 'auto'}} >crear</Button>
+            </Box>
+        </Box>
+    )
+}

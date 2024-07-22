@@ -24,7 +24,8 @@ export default function Inicio() {
     
 
     const [ver, setVer] = useState(false)
-    
+    //const [value, setValue] = useState(false)
+
     useEffect(()=>{
         let info = []
         lugares.map((lug)=>{
@@ -111,11 +112,24 @@ export default function Inicio() {
                                                             <Link to='/updateproductLug' >
                                                                 <Button size="medium" sx={{ margin: 'auto', backgroundColor: '#1769aa', color: 'white' }} onClick={()=>{
                                                                     setIdg(producto.IdGenerate)
+                                                                    sessionStorage.setItem('id', producto.IdGenerate)
+                                                                    sessionStorage.setItem('lugar', prod.fullname)
+                                                                    sessionStorage.setItem('id_lugar', prod.id_lugar)
                                                                 }} >Actualizar Stock</Button>
                                                             </Link>
                                                             <Button size="medium" sx={{ margin: 'auto', backgroundColor: '#1769aa', color: 'white' }} >Eliminar del Lugar</Button>
                                                             <Button size="md" color="error" variant="contained" onClick={async ()=>{
-                                                                Swal.fire({
+                                                                let value = false
+                                                                cart.map((el)=>{  
+                                                                    console.log(el.id);  
+                                                                    console.log(producto.IdGenerate);
+                                                                    if (el.id == producto.IdGenerate) {
+                                                                        console.log('if');
+                                                                        value = true
+                                                                    }
+                                                                })
+                                                                console.log(value);
+                                                                !value ? Swal.fire({
                                                                     title: "Ingrese cantidad",
                                                                     input: "text",
                                                                     inputAttributes: {
@@ -142,7 +156,13 @@ export default function Inicio() {
                                                                         refresh()  
                                                                         
                                                                     }else{ alert('error') }
+                                                                  }) :  
+                                                                  Swal.fire({
+                                                                    icon: "error",
+                                                                    title: "Producto ya existe en el carrito",
+                                                                    text: "si quiere cambiar de lugar porfavor primero elimine el producto del carrito y vuelvalo a cargar",
                                                                   });
+                                                                  
                                                                 
                                                             }} >
                                                                 agregar al carrito
@@ -157,7 +177,9 @@ export default function Inicio() {
             {
                 ver ? <div style={{ width: '100%',  }}><Productos/></div> 
                 : <div style={{ display: 'flex', marginTop: '45px' }} >
-                    <Button variant="contained" size="large" style={{ margin: 'auto', backgroundColor: '#ab47bc' }} onClick={()=>{ setVer(true)}} >Productos</Button>
+                    <Button variant="contained" size="large" style={{ margin: 'auto', backgroundColor: '#ab47bc' }} onClick={ async ()=>{ 
+                        await getProductos() 
+                        setVer(true)}} >Productos</Button>
                 </div>
             }
             </div>

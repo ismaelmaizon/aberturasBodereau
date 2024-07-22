@@ -8,6 +8,6 @@ const router = Router()
 
 
 
-router.post("/registrarVenta/:id", registrarVenta)
+router.post("/registrarVenta", registrarVenta)
 
 export default router
