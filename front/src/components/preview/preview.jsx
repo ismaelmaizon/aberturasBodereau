@@ -143,7 +143,7 @@ export default function Preview () {
                             <Box sx={{ flexGrow: 5 }} />
                             <Grid item xs={2}  alignSelf='flex-end'>
                                 <Button startIcon={<SendIcon/>} onClick={ async ()=>{
-                                    
+                                    let status = false
                                     const info = {
                                         'cliente': cliente,
                                         'total': total
@@ -161,25 +161,43 @@ export default function Preview () {
                                         }
                                         
                                         let regProdVenta = await registrarProdsVenta(infoProd)
-                                        console.log(regProdVenta);
+                                        console.log(regProdVenta.status);
+                                        if (regProdVenta.status == 200) {
+                                            let update = {
+                                                Idg: el.idg, 
+                                                stock: el.cantidad, 
+                                                Lugar: el.id_lugar, 
+                                                procedimiento: 'quitar'
+                                            }
+                                            let upprodlug = await updateproductolugar(update)
+                                            console.log(upprodlug);
+                                            if (upprodlug.status == 200) {
+                                                let upprod = await updateStockProduct(update.Idg)
+                                                console.log(upprod);
+                                            }
+                                        }else{
+                                            status = false
+                                        } 
                                     })
                                     /*
-                                    cart.map( async (el)=>{
-                                        console.log(el);
-                                        let update = {
-                                            Idg: el.idg, 
-                                            stock: el.cantidad, 
-                                            Lugar: el.id_lugar, 
-                                            procedimiento: 'quitar'
-                                        }
+                                    if (status) {
+                                        cart.map( async (el)=>{
+                                            console.log(el);
+                                            let update = {
+                                                Idg: el.idg, 
+                                                stock: el.cantidad, 
+                                                Lugar: el.id_lugar, 
+                                                procedimiento: 'quitar'
+                                            }
+                                            let upprodlug = await updateproductolugar(update)
+                                            console.log(upprodlug);
+                                            if (upprodlug.status == 200) {
+                                                let upprod = await updateStockProduct(update.Idg)
+                                                console.log(upprod);
+                                            }})   
                                         
-                                        let upprodlug = await updateproductolugar(update)
-                                        console.log(upprodlug);
-                                        if (upprodlug.status == 200) {
-                                            let upprod = await updateStockProduct(update.Idg)
-                                            console.log(upprod);
-                                        }    
-                                    })*/
+                                    }*/
+                                    
                                 }} >
                                     Vender 
                                 </Button>
