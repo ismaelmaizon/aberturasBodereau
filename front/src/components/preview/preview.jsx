@@ -10,7 +10,7 @@ import SendIcon from '@mui/icons-material/Send';
 export default function Preview () {
 
     const {lugares, productos ,cart, setCart,
-        updateproductolugar, updateStockProduct, registrarVenta
+        updateproductolugar, updateStockProduct, registrarVenta, registrarProdsVenta
     } = useContext(MiContexto)
 
     
@@ -53,7 +53,9 @@ export default function Preview () {
             cart.map((prodc)=>{
                 if (prod.IdGenerate == prodc.id ) {
                     let newProd = {
-                        id: prod.IdGenerate,
+                        id: prod.id,
+                        idg: prod.IdGenerate,
+                        Tipo: prod.Tipo,
                         lugar: prodc.lugar,
                         id_lugar: prodc.id_lugar,
                         cantidad: prodc.cantidad,
@@ -88,7 +90,7 @@ export default function Preview () {
                                                 
                                                 <Grid item xs={2} color='black' >
                                                     <Typography paddingBottom={3} alignSelf='flex-start'>
-                                                        Producto: {el.id} 
+                                                        Producto: {el.idg} 
                                                     </Typography>  
                                                     <Typography >
                                                         {el.lugar} 
@@ -141,33 +143,42 @@ export default function Preview () {
                             <Box sx={{ flexGrow: 5 }} />
                             <Grid item xs={2}  alignSelf='flex-end'>
                                 <Button startIcon={<SendIcon/>} onClick={ async ()=>{
-                                    console.log(cliente);
-                                    console.log(cart);
-                                    console.log(total);
+                                    
                                     const info = {
                                         'cliente': cliente,
-                                        'cart': cart,
                                         'total': total
                                     }
-                                    let res = await registrarVenta(info)
-                                    console.log(res);
-
-
+                                    const respons = await registrarVenta(info)
+                                    console.log(respons);
+                                    cart.map( async (el)=>{
+                                        let infoProd = {
+                                            id_venta: respons.id,
+                                            id_producto: el.id, 
+                                            IdGenerate: el.idg, 
+                                            Tipo: el.Tipo, 
+                                            cantidad: el.cantidad, 
+                                            subtotal: el.subTotal
+                                        }
+                                        
+                                        let regProdVenta = await registrarProdsVenta(infoProd)
+                                        console.log(regProdVenta);
+                                    })
                                     /*
                                     cart.map( async (el)=>{
                                         console.log(el);
                                         let update = {
-                                            Idg: el.id, 
+                                            Idg: el.idg, 
                                             stock: el.cantidad, 
                                             Lugar: el.id_lugar, 
                                             procedimiento: 'quitar'
                                         }
+                                        
                                         let upprodlug = await updateproductolugar(update)
                                         console.log(upprodlug);
                                         if (upprodlug.status == 200) {
                                             let upprod = await updateStockProduct(update.Idg)
                                             console.log(upprod);
-                                        }
+                                        }    
                                     })*/
                                 }} >
                                     Vender 

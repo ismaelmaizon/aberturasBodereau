@@ -5,12 +5,11 @@ import { DataTime, generarIDAleatorioVentas } from "../utils.js";
 
 //registrar venta
 export const registrarVenta = async (req, res) =>{
-    const {cliente, cart, total} = req.body
-    const fecha = '2024-07-21 22:07:04'
+    const {cliente, total} = req.body
+    const fecha = DataTime()
     const id_venta = generarIDAleatorioVentas(10)
-    
     const { nombre, apellido, mail, cel } = cliente
-    
+    console.log(id_venta);
     try {
         const [rows] = await pool.query(
             "INSERT INTO ventas (id_venta, fecha, nombre, apellido, mail, cel, total) VALUES (?, ?, ?, ?, ?, ?, ?);",[
@@ -18,10 +17,29 @@ export const registrarVenta = async (req, res) =>{
           );
         console.log(rows);
         if (rows) {
-          res.send({status: 200, message: 'registro creado', res: id_venta})
+          res.status(200).json({ message: 'registro creado', id: id_venta});
         }
       } catch (error) {
         return res.status(500).json({ message: "Something goes wrong" });
       }
+
+} 
+
+//registrar asociar producto a venta
+export const registrarProdVenta = async (req, res) =>{
+  const {id_venta, id_producto, IdGenerate, Tipo, cantidad, subtotal} = req.body
+  console.log(id_venta);
+  try {
+      const [rows] = await pool.query(
+          "INSERT INTO ventasProduct (id_venta, id_producto, IdGenerate, Tipo, cantidad, subtotal) VALUES (?, ?, ?, ?, ?, ?);",[
+            id_venta, id_producto, IdGenerate, Tipo, cantidad, subtotal]
+        );
+      console.log(rows);
+      if (rows) {
+        res.status(200).json({ message: 'producto agregado', response: rows});
+      }
+    } catch (error) {
+      return res.status(500).json({ message: "Something goes wrong" });
+    }
 
 } 

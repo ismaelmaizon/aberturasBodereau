@@ -50,8 +50,6 @@ const CartProvider = ({children}) => {
             throw new Error('problemas al consultar en la navegacion');
           }
           const data = await response.json();
-          console.log(data);
-          console.log(data.IdGenerate);
           setIdg(data.IdGenerate)
           return data
         } catch (error) {
@@ -70,7 +68,6 @@ const CartProvider = ({children}) => {
             throw new Error('problemas al consultar en la navegacion');
           }
           const data = await response.json();
-          console.log(data.response)
           if (data.response == []) {
             return []
           }else{
@@ -91,7 +88,6 @@ const CartProvider = ({children}) => {
             throw new Error('problemas al consultar en la navegacion');
           }
           const data = await response.json();
-          console.log(data.response);
           return data.response
         } catch (error) {
           console.error('problemas con la consulta:', error);
@@ -321,20 +317,32 @@ const CartProvider = ({children}) => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      console.log(response);
-      console.log(response.data);
-      console.log(response.data);
-      return response
+      return response.json()
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
       
     }
   }
 
-  //añadir producto a SessionStorage
-  const addProdSessionStorage = async (producto) =>{
-    sessionStorage.setItem(producto.IdGenerate, producto.IdGenerate)
-    
+  //añadir producto a Venta
+  const registrarProdsVenta = async (data) =>{
+    console.log(data);
+    try {
+      const response = await fetch(`http://localhost:8080/api/ventas/registrarProdVenta`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json()
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error);
+      
+    }
   }
 
   // Limpiar Filtro
@@ -460,8 +468,7 @@ const CartProvider = ({children}) => {
         createProducto,
         updateStockProduct,
         insertProdLug, updateproductolugar,
-        registrarVenta, cart, setCart,
-        addProdSessionStorage,
+        registrarVenta, registrarProdsVenta, cart, setCart,
         alert
       }} >
           {children}
