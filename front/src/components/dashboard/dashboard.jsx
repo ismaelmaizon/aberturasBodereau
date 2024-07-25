@@ -4,6 +4,20 @@ import { MiContexto } from "../context/context";
 import { Link, useNavigate } from "react-router-dom";
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 
+import { Page, Text, View, Document, StyleSheet, Image, PDFDownloadLink } from '@react-pdf/renderer';
+
+// Create styles
+const styles = StyleSheet.create({
+    page: {
+    flexDirection: 'row',
+    backgroundColor: '#E4E4E4'
+    },
+    section: {
+    margin: 10,
+    padding: 10,
+    flexGrow: 1
+    }
+});
 
 
 
@@ -12,6 +26,21 @@ export default function Dashboard () {
 
     const {venta} = useContext(MiContexto)
 
+    
+// Create Document Component
+function MyDocument () {
+    return(
+    <Document>
+    <Page size="A4" style={styles.page}>
+        <View style={styles.section}>
+        <Text> {venta.id_venta} </Text>
+        </View>
+        <View style={styles.section}>
+        <Text>Section #2</Text>
+        </View>
+    </Page>
+    </Document>
+)};
 
     useEffect(()=>{
         console.log(venta);
@@ -76,6 +105,16 @@ export default function Dashboard () {
                                                 }} >
                                                     Imprimir 
                                                 </Button>
+                                                
+                                                <PDFDownloadLink document={<MyDocument/>} fileName="mypdf.pdf" >
+                                                    {
+                                                        ({loading, url, error, blob}) => loading ? <Button>
+                                                        cargando...</Button> : <Button startIcon={<LocalPrintshopIcon/>} onClick={ async ()=>{
+                                                        }} >
+                                                            Imprimir 
+                                                        </Button>                                                         
+                                                    }
+                                                </PDFDownloadLink>
                                             </Grid>
                                             
                                         </Grid>
