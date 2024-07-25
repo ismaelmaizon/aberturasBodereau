@@ -17,7 +17,7 @@ export const registrarVenta = async (req, res) =>{
           );
         console.log(rows);
         if (rows) {
-          res.status(200).json({ message: 'registro creado', id: id_venta});
+          res.status(200).json({ status: 200, message: 'registro creado', id: id_venta});
         }
       } catch (error) {
         return res.status(500).json({ message: "Something goes wrong" });
@@ -36,7 +36,7 @@ export const registrarProdVenta = async (req, res) =>{
         );
       console.log(rows);
       if (rows) {
-        res.status(200).json({ message: 'producto agregado', response: rows});
+        res.status(200).json({  status: 200, message: 'producto agregado', response: rows});
       }
     } catch (error) {
       return res.status(500).json({ message: "Something goes wrong" });

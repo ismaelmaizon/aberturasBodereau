@@ -301,18 +301,23 @@ const CartProvider = ({children}) => {
 
     setRows(prods);
   };
-
-  //Registrar Venta
+  
   const [cart, setCart] = useState([])
+  //Registrar Venta
+  const [venta, setVenta] = useState({})
   const registrarVenta = async (data) => {
-    console.log(data);
+    const venta = {
+      'cliente': data.cliente,
+      'total': data.total
+    }
+    console.log(venta);
     try {
       const response = await fetch(`http://localhost:8080/api/ventas/registrarVenta`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(venta)
       });
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -339,7 +344,6 @@ const CartProvider = ({children}) => {
         throw new Error('Network response was not ok');
       }
       console.log(response.status);
-      console.log(await response.json());
       return response
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
@@ -470,7 +474,7 @@ const CartProvider = ({children}) => {
         createProducto,
         updateStockProduct,
         insertProdLug, updateproductolugar,
-        registrarVenta, registrarProdsVenta, cart, setCart,
+        registrarVenta, registrarProdsVenta, cart, setCart, venta, setVenta,
         alert
       }} >
           {children}
