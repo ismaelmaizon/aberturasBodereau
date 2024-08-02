@@ -13,7 +13,8 @@ import AddProductLug from './components/addproductLug/addproductLug.jsx'
 import UpdateProductLug from './components/updateproductLug/updateproductLug.jsx'
 import Preview from './components/preview/preview.jsx'
 import Dashboard from './components/dashboard/dashboard.jsx'
-
+import Ventas from './components/ventas/ventas.jsx'
+import PorductDetail from './components/productDetail/productDetail.jsx'
 
 
 function App() {
@@ -38,6 +39,8 @@ function App() {
               <Route element={<UpdateProductLug/>} path='/updateproductLug' ></Route>
               <Route element={<Preview/>} path='/preview' ></Route>
               <Route element={<Dashboard/>} path='/dashboard' ></Route>
+              <Route element={<Ventas/>} path='/ventas' ></Route>
+              <Route element={<PorductDetail/>} path='/detalle' ></Route>
             </Routes>
           </div>
         </CartProvider>

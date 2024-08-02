@@ -69,11 +69,6 @@ export default function NavBar() {
     );
 
 
-    useEffect(()=>{
-      //obtenerTodosLosItems()
-      console.log(cart);
-    }, [])
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">

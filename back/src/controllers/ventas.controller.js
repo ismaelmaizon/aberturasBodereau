@@ -1,5 +1,4 @@
 
-import { response } from "express";
 import { pool } from "../db.js";
 import { DataTime, generarIDAleatorioVentas } from "../utils.js";
 
@@ -25,7 +24,7 @@ export const registrarVenta = async (req, res) =>{
 
 } 
 
-//registrar asociar producto a venta
+//Asociar producto a venta
 export const registrarProdVenta = async (req, res) =>{
   const {id_venta, id_producto, IdGenerate, Tipo, cantidad, subtotal} = req.body
   console.log(id_venta);
@@ -41,5 +40,39 @@ export const registrarProdVenta = async (req, res) =>{
     } catch (error) {
       return res.status(500).json({ message: "Something goes wrong" });
     }
+
+} 
+
+
+//get ventas
+export const getVentas = async (req, res) =>{
+  let ventas = []
+  try {
+    const [rows] = await pool.query("SELECT * FROM ventas");
+    rows.map((pac) =>{
+      ventas.push(pac)
+    })
+    res.send( {status: 200, message: 'succes', response: ventas} );
+  } catch (error) {
+    return res.status(500).json({ message: "Something goes wrong" });
+  }
+} 
+
+//get venta
+export const getVentaId = async (req, res) =>{
+  try {
+    const { idg } = req.params;
+    console.log(idg);
+    const [rows] = await pool.query("SELECT * FROM ventas WHERE id_venta = ?", [
+      idg,
+    ]);
+
+    if (rows.length <= 0) {
+      return res.status(404).json({ message: "producto not found" });
+    }
+    res.json(rows[0]);
+  } catch (error) {
+    return res.status(500).json({ message: "Something goes wrong" });
+  }
 
 } 

@@ -20,10 +20,10 @@ const MenuProps = {
 export default function Productos() {
 
     const {
+        vprod, setVprod, vent, setVent,
         lugares,
         productos, setProductoUbi,
-        getProducto, setProducto,
-        getUbiProducto,
+        getProducto, setProducto, getVentas, getProductos,
         filtrarTipoLadoLug, rows, setRows,
         refresh,
         lug, setLug, lado, setLado, tipo, setTipo
@@ -84,7 +84,19 @@ export default function Productos() {
         { field: 'col7', headerName: 'stock', width: 150 },
         { field: 'col8', headerName: 'PrecioUnidad', width: 150 }
     ]
-    
+
+    //modificar vista
+    const modiVista = async (view) =>{
+        if (view == 'ventas') {
+            await getVentas()
+            setVent(true)
+            setVprod(false)
+        }else{
+            await getProductos()
+            setVprod(true)
+            setVent(false)
+        }
+    }
     
 
     useEffect(()=>{
@@ -93,8 +105,6 @@ export default function Productos() {
         let prods = []
         let ids = []
         productos.map((prod)=>{ 
-            console.log(prod.id);
-            console.log(prod.IdGenerate);
             let id = { label: prod.IdGenerate }
             let newProd = {
                 id: prod.id,
@@ -118,7 +128,10 @@ export default function Productos() {
 
     return (
         <div style={{ height: 350, width: '90%', margin: 'auto', marginTop: '15px' }}>
-            <Button variant="contained"  sx={{ padding: '15px' }} endIcon={<RotateLeftIcon />} onClick={()=>{refresh()}}>refresh</Button>
+            <Grid container direction='row' gap={2} >
+                <Button variant="contained"  sx={{ padding: '15px' }} endIcon={<RotateLeftIcon />} onClick={()=>{refresh()}}>refresh</Button>
+                <Button variant="contained"  sx={{ padding: '15px' }} endIcon={<RotateLeftIcon />} onClick={()=>{modiVista('ventas')}}>ventas</Button>
+            </Grid>
             <Grid sx={{ display: { xs: 'none', md: 'grid', gridTemplateColumns: `repeat(6, 1fr)`, alignItems:'center'},  gap: '5px' }} container>
                 <Grid item xs={6} >
                     <FormControl sx={{ marginTop: '10px' , width: '100%', paddingBottom: '10px'}}>
@@ -306,13 +319,8 @@ export default function Productos() {
                         setProducto([])
                         let res = await getProducto(prod)
                         console.log(res);
-                        let response = await getUbiProducto(prod)
-                        console.log(response);
-                        if (response.length == 0 && res) {
-                            setProducto(res)
-                            console.log(res); 
-                        }
-                        }} >buscar</Button>
+                        setProducto(res) 
+                        }} >bcar</Button>
                 </Grid>
             </Grid>
             <DataGrid sx={{height: '500px'}} rows={rows} columns={columns}  />

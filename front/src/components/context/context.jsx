@@ -8,7 +8,12 @@ import Swal from 'sweetalert2'
 export const MiContexto = createContext([])
 
 
-const CartProvider = ({children}) => {
+const CartProvider = ( { children } ) => {
+  //vista
+  const [vprod, setVprod] = useState(false)
+  const [vent, setVent] = useState(false)
+
+
   //obtener lugares
   const [lugares, setLugares] = useState([])
   const getLugares = async () =>{
@@ -57,27 +62,25 @@ const CartProvider = ({children}) => {
         }
       
   }
-
   //obtener ubicacion de productos
   const [productoUbi, setProductoUbi] = useState([])
   const [infoprod, setInfoprod] = useState([])
   const getUbiProducto = async (id) =>{
-      try {
-          const response = await fetch(`http://localhost:8080/api/lugaresProd/getUbicacionProducto/${id}`)
-          if (!response.ok) {
-            throw new Error('problemas al consultar en la navegacion');
-          }
-          const data = await response.json();
-          if (data.response == []) {
-            return []
-          }else{
-            setProductoUbi(data.response)
-            return data.response
-          }
-        } catch (error) {
-          console.error('problemas con la consulta:', error);
+    try {
+        const response = await fetch(`http://localhost:8080/api/lugaresProd/getUbicacionProducto/${id}`)
+        if (!response.ok) {
+          throw new Error('problemas al consultar en la navegacion');
         }
-      
+        const data = await response.json();
+        if (data.response == []) {
+          return []
+        }else{
+          setProductoUbi(data.response)
+          return data.response
+        }
+      } catch (error) {
+        console.error('problemas con la consulta:', error);
+      }
   }
   //obtener productos de un lugar
   const [productsLug, setProductsLug] = useState([])
@@ -94,7 +97,7 @@ const CartProvider = ({children}) => {
         }
         
   }
-
+  
   //crear producto
   //const [prodCreado, setPructoCreado] = useState(false)
   const createProducto = async ( data ) =>{
@@ -328,6 +331,37 @@ const CartProvider = ({children}) => {
       
     }
   }
+  //obtener ventas
+  const [ventas, setVentas] = useState([])
+  const getVentas = async () =>{
+    try {
+        const response = await fetch('http://localhost:8080/api/ventas/getVentas')
+        if (!response.ok) {
+          throw new Error('problemas al consultar en la navegacion');
+        }
+        const data = await response.json();
+        setVentas(data.response)
+      } catch (error) {
+        console.error('problemas con la consulta:', error);
+      }
+  }
+  //obtener venta
+  const [idv, setIdv] = useState('')
+  const [ventainf, setVentainf] = useState([])
+  const getVenta = async (id) =>{
+      try {
+          const response = await fetch(`http://localhost:8080/api/ventas/getVentaId/${id}`)
+          if (!response.ok) {
+            throw new Error('problemas al consultar en la navegacion');
+          }
+          const data = await response.json();
+          setIdv(data.id_venta)
+          return data
+        } catch (error) {
+          console.error('problemas con la consulta:', error);
+        }
+      
+  }
 
   //añadir producto a Venta
   const registrarProdsVenta = async (data) =>{
@@ -456,25 +490,31 @@ const CartProvider = ({children}) => {
       
 
   useEffect(()=>{
-    getProductos()
-    getLugares()
+    console.log('context');
   },[])
 
   return (
       // aca llamamos al hoock useMiContexto
       <MiContexto.Provider value={{
-        lugares, setLugares,
+        vprod, setVprod, vent, setVent,
+        
         productos, setProductos, getProductos,
-        producto, setProducto, getProducto,idg, setIdg,
+        producto, setProducto, getProducto, idg, setIdg,
         productoUbi, setProductoUbi, getUbiProducto, infoprod, setInfoprod,
+        updateStockProduct,
         getProductosLugar, productsLug, setProductsLug,
         filtrarTipoLadoLug, rows, setRows,
-        refresh,
+        
+        getLugares, lugares, setLugares,
         lug, setLug, lado, setLado, tipo, setTipo, ubi, setUbi,
         createProducto,
-        updateStockProduct,
         insertProdLug, updateproductolugar,
-        registrarVenta, registrarProdsVenta, cart, setCart, venta, setVenta,
+        registrarVenta, registrarProdsVenta, venta, setVenta, 
+        cart, setCart, 
+        idv, setIdv,
+        getVentas, ventas, setVentas,
+        ventainf, setVentainf, getVenta,
+        refresh,
         alert
       }} >
           {children}

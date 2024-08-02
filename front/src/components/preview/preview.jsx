@@ -9,8 +9,8 @@ import SendIcon from '@mui/icons-material/Send';
 
 export default function Preview () {
 
-    const {lugares, productos ,cart, setCart, venta, setVenta,
-        updateproductolugar, updateStockProduct, registrarVenta, registrarProdsVenta
+    const {productos ,cart, setCart, venta, setVenta,
+        registrarVenta
     } = useContext(MiContexto)
 
     const router = useNavigate()
@@ -161,37 +161,9 @@ export default function Preview () {
                                                     console.log(respons);
                                                     if (respons.status == 200) {
                                                         info.id_venta = respons.id
-                                                        cart.map( async (el)=>{
-                                                            let infoProd = {
-                                                                id_venta: respons.id,
-                                                                id_producto: el.id, 
-                                                                IdGenerate: el.idg, 
-                                                                Tipo: el.Tipo, 
-                                                                cantidad: el.cantidad, 
-                                                                subtotal: el.subTotal
-                                                            }
-                                                            
-                                                            let regProdVenta = await registrarProdsVenta(infoProd)
-                                                            console.log(regProdVenta.status);
-                                                            if (regProdVenta.status == 200) {
-                                                                let update = {
-                                                                    Idg: el.idg, 
-                                                                    stock: el.cantidad, 
-                                                                    Lugar: el.id_lugar, 
-                                                                    procedimiento: 'quitar'
-                                                                }
-                                                                let upprodlug = await updateproductolugar(update)
-                                                                console.log(upprodlug);
-                                                                if (upprodlug.status == 200) {
-                                                                    let upprod = await updateStockProduct(update.Idg)
-                                                                    console.log(upprod);
-                                                                }
-                                                            } 
-                                                        })
+                                                        setVenta(info)
+                                                        router('/dashboard')
                                                     }
-                                                    setVenta(info)
-                                                    router('/dashboard')
-                                                    
                                                 }} >
                                                     Vender 
                                                 </Button>
@@ -207,3 +179,35 @@ export default function Preview () {
         </div>
     ) 
 } 
+
+/*
+cart.map( async (el)=>{
+    let infoProd = {
+        id_venta: respons.id,
+        id_producto: el.id, 
+        IdGenerate: el.idg, 
+        Tipo: el.Tipo, 
+        cantidad: el.cantidad, 
+        subtotal: el.subTotal
+    }
+    
+    let regProdVenta = await registrarProdsVenta(infoProd)
+    console.log(regProdVenta.status);
+    if (regProdVenta.status == 200) {
+        let update = {
+            Idg: el.idg, 
+            stock: el.cantidad, 
+            Lugar: el.id_lugar, 
+            procedimiento: 'quitar'
+        }
+        let upprodlug = await updateproductolugar(update)
+        console.log(upprodlug);
+        if (upprodlug.status == 200) {
+            let upprod = await updateStockProduct(update.Idg)
+            console.log(upprod);
+        }
+    } 
+})
+
+
+*/
